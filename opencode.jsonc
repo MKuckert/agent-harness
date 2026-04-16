@@ -1,0 +1,66 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@tarquinen/opencode-dcp@latest"],
+
+  // See https://opencode.ai/docs/permissions/
+  "permission": {
+    // Permissive by default
+    "*": "deny",
+
+    // we use containerized MCP server instead of buildin operations
+    "read": "deny",
+    "edit": "deny",
+    "glob": "deny",
+    "grep": "deny",
+    "list": "deny",
+    "bash": "deny",
+
+    // launching subagents (matches the subagent type)
+    "task": "allow",
+
+    // triggered when the same tool call repeats 3 times with identical input
+    "doom_loop": "ask",
+  },
+  "agent": {
+    "build": {
+      "disable": true,
+    },
+    "plan": {
+      "disable": true,
+    },
+    "general": {
+      "disable": true,
+    },
+    "explore": {
+      "disable": true,
+    },
+  },
+  "provider": {
+    "google": {
+      "models": {
+        "fast-cheap": {
+          "name": "Gemini Fast & Cheap (3.1 flash lite)",
+          "id": "gemini-3.1-flash-lite-preview",
+        },
+        "pro": {
+          "name": "Gemini Pro (3.1)",
+          "id": "gemini-3.1-pro-preview",
+        },
+      },
+    },
+
+    // Local models
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1",
+      },
+      "models": {
+        "tiny": {
+          "name": "Tiny",
+        },
+      },
+    },
+  },
+}
