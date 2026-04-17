@@ -1,0 +1,20 @@
+FROM node:24 AS builder
+WORKDIR /app
+
+ARG MCP_PACKAGE
+
+RUN npm install ${MCP_PACKAGE}
+
+# Stage 2: Runtime (Distroless für die Paranoia)
+FROM node:24-alpine
+WORKDIR /app
+
+ARG MCP_PACKAGE
+
+COPY --from=builder \
+    /app/node_modules \
+    /app/node_modules
+
+ENV NODE_PATH=/app/node_modules
+WORKDIR /app/node_modules/.bin
+CMD ${MCP_PACKAGE}
