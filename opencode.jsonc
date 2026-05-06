@@ -2,10 +2,35 @@
   "$schema": "https://opencode.ai/config.json",
   "plugin": ["@tarquinen/opencode-dcp@latest"],
 
+  "agent": {
+    "build": {
+      "disable": true,
+    },
+    "plan": {
+      "disable": true,
+    },
+    "general": {
+      "disable": true,
+    },
+    "explore": {
+      "disable": true,
+    },
+  },
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["nerdctl", "run", "--rm", "containered-mcps-context7"],
+      "enabled": true,
+    },
+  },
   // See https://opencode.ai/docs/permissions/
   "permission": {
     // Permissive by default
     "*": "deny",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "todowrite": "deny",
+    "skill": "deny",
 
     // we use containerized MCP server instead of buildin operations
     "read": "deny",
@@ -20,20 +45,6 @@
 
     // triggered when the same tool call repeats 3 times with identical input
     "doom_loop": "ask",
-  },
-  "agent": {
-    "build": {
-      "disable": true,
-    },
-    "plan": {
-      "disable": true,
-    },
-    "general": {
-      "disable": true,
-    },
-    "explore": {
-      "disable": true,
-    },
   },
   "provider": {
     "google": {

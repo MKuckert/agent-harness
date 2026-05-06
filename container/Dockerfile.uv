@@ -1,3 +1,8 @@
+# Can replace any mcp executed through `uvx` or similar
+# Doesn't set CMD so you have to pass the command to execute in the
+# container when running it or in the compose file.
+
+# Builder
 FROM ghcr.io/astral-sh/uv:python3.12-slim
 WORKDIR /app
 

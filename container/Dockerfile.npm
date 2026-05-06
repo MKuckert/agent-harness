@@ -1,11 +1,16 @@
+# Can replace any mcp executed through `npx` or similar
+# Doesn't set CMD so you have to pass the command to execute in the
+# container when running it or in the compose file.
+
+# Builder
 FROM node:24 AS builder
 WORKDIR /app
 
 ARG MCP_PACKAGE
 
-RUN npm install ${MCP_PACKAGE}
+RUN npm install $MCP_PACKAGE
 
-# Stage 2: Runtime (Distroless für die Paranoia)
+# Runtime
 FROM node:24-alpine
 WORKDIR /app
 
@@ -17,4 +22,3 @@ COPY --from=builder \
 
 ENV NODE_PATH=/app/node_modules
 WORKDIR /app/node_modules/.bin
-CMD ${MCP_PACKAGE}

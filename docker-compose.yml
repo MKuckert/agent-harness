@@ -2,34 +2,33 @@ name: containered-mcps
 
 x-service-defaults: &service-defaults
   stdin_open: true
+  tty: false
   read_only: true
   deploy:
-    mode: global
     resources:
       limits:
         cpus: "0.5"
         memory: 128M
-  security_opt:
-    - no-new-privileges:true
 
 services:
   context7:
     <<: *service-defaults
-    container_name: "${FEATURE_NAME}-context7"
+    container_name: "context7-mcp"
     build:
       context: container
       dockerfile: Dockerfile.npm
       args:
-        - MCP_PACKAGE=ctx7
+        - MCP_PACKAGE=@upstash/context7-mcp
+    command: "context7-mcp"
 
-  fetch:
-    <<: *service-defaults
-    container_name: "${FEATURE_NAME}-fetch"
-    build:
-      context: container
-      dockerfile: Dockerfile.uv
-      args:
-        - MCP_PACKAGE=mcp-server-fetch
-    tmpfs:
-      - /tmp
-      - /home/uv/.cache
+#  fetch:
+#    <<: *service-defaults
+#    container_name: "${FEATURE_NAME}-fetch"
+#    build:
+#      context: container
+#      dockerfile: Dockerfile.uv
+#      args:
+#        - MCP_PACKAGE=mcp-server-fetch
+#    tmpfs:
+#      - /tmp
+#      - /home/uv/.cache
