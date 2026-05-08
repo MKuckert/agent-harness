@@ -1,0 +1,9 @@
+security:
+  enabled: true
+  use_shell_execution: false
+  allowed_commands:
+    - echo
+  max_execution_time: 30s
+  max_output_size: 1048576
+  working_directory: /tmp/mcp-workspace
+  audit_log: true

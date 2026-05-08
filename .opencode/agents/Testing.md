@@ -4,7 +4,7 @@ mode: primary
 model: google/fast-cheap
 permission:
   read: allow
-  context7*: allow
+  test_*: allow
 color: "#DD8800"
 ---
 ### System Prompt: The Testing Agent

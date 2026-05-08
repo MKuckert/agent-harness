@@ -17,19 +17,16 @@
     },
   },
   "mcp": {
-    "context7": {
-      "type": "local",
-      "command": ["nerdctl", "run", "--rm", "containered-mcps-context7"],
+    "test": {
+      "type": "remote",
       "enabled": true,
+      "url": "http://localhost:8080/mcp",
     },
   },
   // See https://opencode.ai/docs/permissions/
   "permission": {
     // Permissive by default
     "*": "deny",
-    "webfetch": "deny",
-    "websearch": "deny",
-    "todowrite": "deny",
     "skill": "deny",
 
     // we use containerized MCP server instead of buildin operations
@@ -39,6 +36,9 @@
     "grep": "deny",
     "list": "deny",
     "bash": "deny",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "todowrite": "deny",
 
     // launching subagents (matches the subagent type)
     "task": "allow",

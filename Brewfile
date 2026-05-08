@@ -1,7 +1,10 @@
+## Compiling docker-mcp plugin
+brew "go"
+
 ## Containerization
 brew "docker"
 brew "docker-compose"
 brew "docker-buildx"
 
-## MCP inspector
+## MCP tool
 brew "f/mcptools/mcp"
