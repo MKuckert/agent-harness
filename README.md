@@ -42,6 +42,54 @@ Pull the Docker MCP catalog
 docker mcp catalog pull mcp/docker-mcp-catalog:latest
 ```
 
+### Create a profile
+
+Creates a new profile named `test`:
+
+```sh
+docker mcp profile create --name test
+```
+
+#### Add servers from docker hub (docker mcp catalog)
+
+This is the default catalog https://hub.docker.com/mcp, named `catalog://mcp/docker-mcp-catalog` for all `docker mcp` purposes.
+
+You can add servers from docker hub by appending the server name to the catalog name:
+
+```
+https://hub.docker.com/mcp/server/duckduckgo/overview
+                                  `--------´
+                                      |
+                                  ,--------.
+ catalog://mcp/docker-mcp-catalog/duckduckgo
+```
+
+Results in this call to add the duckduckgo MCP server. Adapt accordingly.
+```sh
+docker mcp profile server add test --server catalog://mcp/docker-mcp-catalog/duckduckgo
+```
+
+#### Add servers from existing docker container using local file spec
+
+One can add arbitrary docker containers leveraging a [local file spec](https://github.com/docker/mcp-gateway/blob/main/docs/server-entry-spec.md).
+
+Example to add the `sonirico/mcp-shell` docker container:
+
+```yaml
+name: mcp-shell
+title: Shell
+type: server
+image: sonirico/mcp-shell@sha256:11eb9e31ca353362d3bb5b3ce850ccd8e40d708228e20690fbc7474003062261
+description: Provides a shell executable
+```
+
+Results in this call to add the shell MCP server. Adapt accordingly.
+```sh
+docker mcp profile server add test --server file://path/to/mcp-shell.yaml
+```
+
+### Im-/Export profiles
+
 ### Run the gateway
 
 Using profile `$PROFILE`.
