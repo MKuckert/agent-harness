@@ -4,7 +4,7 @@ type: server
 image: sonirico/mcp-shell@sha256:11eb9e31ca353362d3bb5b3ce850ccd8e40d708228e20690fbc7474003062261
 description: Provides a shell executable
 config:
-  - name: shell
+  - name: mcp-shell
     description: "Configure shell"
     type: object
     properties:
@@ -19,6 +19,9 @@ env:
   - name: MCP_SHELL_SERVER_NAME
     value: shell
 volumes:
-  - /Users/mkuckert/private/dev/agent-harness:/tmp/mcp-workspace
-  - /Users/mkuckert/private/dev/agent-harness/servers/mcp-shell/security.yaml:/etc/mcp-shell/security.yaml
+  # Not sure why one can't reference config values here
+  #- "{{shell.workspace}}:/tmp/mcp-workspace"
+  #- "{{shell.workspace}}/servers/mcp-shell/security.yaml:/etc/mcp-shell/security.yaml"
+  - "/Users/mkuckert/private/dev/agent-harness:/tmp/mcp-workspace"
+  - "/Users/mkuckert/private/dev/agent-harness/servers/mcp-shell/security.yaml:/etc/mcp-shell/security.yaml"
 disableNetwork: true
