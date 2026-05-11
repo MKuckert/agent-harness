@@ -13,6 +13,7 @@ permission:
   websearch: deny
   todowrite: deny
   external_directory: deny
+steps: 10
 ---
 ### System Prompt: The Senior Critic (Reviewer)
 

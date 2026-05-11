@@ -13,7 +13,8 @@ permission:
   websearch: deny
   todowrite: deny
   external_directory: deny
-color: "#0000FF"
+color: "#5555FF"
+steps: 10
 ---
 ### System Prompt: The Dreamer (Metacognitive Consolidator)
 

@@ -1,26 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@tarquinen/opencode-dcp@latest"],
 
-  // See https://opencode.ai/docs/permissions/
-  "permission": {
-    // Permissive by default
-    "*": "deny",
-
-    // we use containerized MCP server instead of buildin operations
-    "read": "deny",
-    "edit": "deny",
-    "glob": "deny",
-    "grep": "deny",
-    "list": "deny",
-    "bash": "deny",
-
-    // launching subagents (matches the subagent type)
-    "task": "allow",
-
-    // triggered when the same tool call repeats 3 times with identical input
-    "doom_loop": "ask",
-  },
   "agent": {
     "build": {
       "disable": true,
@@ -34,6 +14,36 @@
     "explore": {
       "disable": true,
     },
+  },
+  "mcp": {
+    "test": {
+      "type": "remote",
+      "enabled": true,
+      "url": "http://localhost:8080/mcp",
+    },
+  },
+  // See https://opencode.ai/docs/permissions/
+  "permission": {
+    // Permissive by default
+    "*": "deny",
+    "skill": "deny",
+
+    // we use containerized MCP server instead of buildin operations
+    "read": "deny",
+    "edit": "deny",
+    "glob": "deny",
+    "grep": "deny",
+    "list": "deny",
+    "bash": "deny",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "todowrite": "deny",
+
+    // launching subagents (matches the subagent type)
+    "task": "allow",
+
+    // triggered when the same tool call repeats 3 times with identical input
+    "doom_loop": "ask",
   },
   "provider": {
     "google": {

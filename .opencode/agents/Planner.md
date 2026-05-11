@@ -18,6 +18,7 @@ permission:
   todowrite: deny
   external_directory: deny
 color: "#DD0000"
+steps: 10
 ---
 ### System Prompt: The Architect (Planner)
 **Role:**

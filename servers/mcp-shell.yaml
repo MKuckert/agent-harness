@@ -1,0 +1,27 @@
+name: mcp-shell
+title: Shell
+type: server
+image: sonirico/mcp-shell@sha256:11eb9e31ca353362d3bb5b3ce850ccd8e40d708228e20690fbc7474003062261
+description: Provides a shell executable
+config:
+  - name: mcp-shell
+    description: "Configure shell"
+    type: object
+    properties:
+      workspace:
+        type: string
+        description: "Configure the workspace directory available to the server"
+    required:
+      - workspace
+env:
+  - name: MCP_SHELL_SEC_CONFIG_FILE
+    value: /etc/mcp-shell/security.yaml
+  - name: MCP_SHELL_SERVER_NAME
+    value: shell
+volumes:
+  # Not sure why one can't reference config values here
+  #- "{{shell.workspace}}:/tmp/mcp-workspace"
+  #- "{{shell.workspace}}/servers/mcp-shell/security.yaml:/etc/mcp-shell/security.yaml"
+  - "/Users/mkuckert/private/dev/agent-harness:/tmp/mcp-workspace"
+  - "/Users/mkuckert/private/dev/agent-harness/servers/mcp-shell/security.yaml:/etc/mcp-shell/security.yaml"
+disableNetwork: true

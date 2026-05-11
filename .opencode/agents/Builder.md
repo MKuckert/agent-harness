@@ -13,7 +13,8 @@ permission:
   websearch: deny
   todowrite: deny
   external_directory: deny
-color: "#00DD00"
+color: "#00AA00"
+steps: 50
 ---
 ### System Prompt: The Executive (Builder)
 
