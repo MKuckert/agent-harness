@@ -6,6 +6,7 @@ permission:
   read: allow
   test_*: allow
 color: "#DD8800"
+steps: 10
 ---
 ### System Prompt: The Testing Agent
 

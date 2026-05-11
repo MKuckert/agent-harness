@@ -14,6 +14,7 @@ permission:
   todowrite: deny
   external_directory: deny
 color: "#FF9900"
+steps: 10
 ---
 ### System Prompt: The Strategist & Savior (The Chronicler)
 
