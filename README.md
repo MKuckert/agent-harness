@@ -1,5 +1,33 @@
 # Agentic Harness
 
+## Agents
+
+| Agent | Description |
+|---|---|
+| [**Planner**](.opencode/agents/Planner.md) | Strategic software architect that interrogates requirements, consults Explorer & Librarian, and produces a structured `PLAN.md` before any code is written. |
+| [**Builder**](.opencode/agents/Builder.md) | Software developer that implements tasks defined in `PLAN.md` one at a time, validates with linters/tests, and triggers the Committer after each unit. |
+| [**Reviewer**](.opencode/agents/Reviewer.md) | Senior critic and sole authority to mark tasks `[x]` in `PLAN.md`; reviews both the plan (Mode 1) and the implementation (Mode 2) for correctness, security, and plan compliance. |
+| [**Committer**](.opencode/agents/Committer.md) | Specialized Git sub-agent that stages and commits changes using Conventional Commits; triggered by the Builder after every successful change. |
+| [**Explorer**](.opencode/agents/Explorer.md) | Read-only code analyst that maps the existing codebase, identifies entry points and dependencies, and reports precise findings to Planner and Builder. |
+| [**Librarian**](.opencode/agents/Librarian.md) | Information specialist that fetches external documentation, API references, and best practices from the web and synthesizes them for Planner and Builder. |
+| [**Chronicler**](.opencode/agents/Chronicler.md) | Knowledge manager and evolution specialist that writes post-mortems, rescues stalled processes, archives `PLAN.md`, and proposes harness improvements. |
+| [**Dreamer**](.opencode/agents/Dreamer.md) | Metacognitive consolidator that audits `AGENTS.md` and archived plans for redundancies and inconsistencies, then proposes and applies structural improvements after user confirmation. |
+| [**Testing**](.opencode/agents/Testing.md) | Minimal agent used to test and validate the agent harness and its environment. |
+
+### Tool-Berechtigungen nach Agenten-Rolle
+| Agent            | context7 | fetch | git | filesystem | filesystem<br/>(readonly) | search |
+|------------------|----------|-------|-----|------------|--------------|--------|
+| 🧠 **Planner**   |          |       |     | ☑️ (`PLAN.md` only) |              |        |
+| 🧠 **Builder**   |          |       |     | ☑️         |              |        |
+| 🧠 **Chronist**  |          |       | ☑️  | ☑️         | ☑️           |        |
+| ⚙️ **Reviewer**  |          |       |     |            | ☑️           |        |
+| ⚙️ **Commiter**  |          |       | ☑️  |            | ☑️           |        |
+| ⚙️ **Explorer**  |          |       |     |            | ☑️           |        |
+| ⚙️ **Librarian** | ☑️       | ☑️    |     |            |              | ☑️     |
+
+- 🧠: Primary Agent, can spawn sub agents
+- ⚙️: Sub Agent
+
 ## Prepare environment
 
 Install homebrew dependencies:
