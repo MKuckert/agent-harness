@@ -65,6 +65,8 @@ dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files
 dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files_content
 dmp tools $profile --enable ${SERVERS["filesystem"]}.tail_file
 dmp tools $profile --enable ${SERVERS["filesystem"]}.write_file
+dmp config $profile --set ${SERVERS["filesystem"]}.enable_roots=false
+dmp config $profile --set ${SERVERS["filesystem"]}.allow_write=true
 
 # Readonly filesystem
 profile=fsro
@@ -80,6 +82,7 @@ dmp tools $profile --enable ${SERVERS["filesystem"]}.read_text_file
 dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files
 dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files_content
 dmp tools $profile --enable ${SERVERS["filesystem"]}.tail_file
+dmp config $profile --set ${SERVERS["filesystem"]}.enable_roots=false
 
 # Git repository
 profile=git

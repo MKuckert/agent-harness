@@ -3,6 +3,9 @@ id: fsrw
 name: fsrw
 servers:
     - type: image
+      config:
+        allow_write: true
+        enable_roots: false
       secrets: default
       tools:
         - create_directory

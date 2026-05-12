@@ -22,3 +22,19 @@ docker mcp gateway run --port 8080 --transport streaming --profile $PROFILE
 ```
 
 See [Setup](SETUP.md) for more examples.
+
+## Configuration
+
+Sadly (or: for safeties sake) one has to configure the containers with filesystem access to specify the working directory. You have to call `docker mcp profile config` with proper values before starting and using your gateway.
+
+Relevant configs:
+
+| profile | config                                    |
+|---------|-------------------------------------------|
+| fsrw    | `rust-mcp-filesystem.allowed_directories` |
+| fsro    | `rust-mcp-filesystem.allowed_directories` |
+| full    | `rust-mcp-filesystem.allowed_directories` |
+| git     | `git.paths`                               |
+| full    | `git.paths`                               |
+
+You can use `bin/docker-mcp-gateway-run.sh $PROFILE` to set this configs when starting the gateway.

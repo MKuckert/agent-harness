@@ -42,6 +42,13 @@ docker mcp feature enable profiles
 docker mcp feature disable dynamic-tools
 echo "export DOCKER_MCP_IN_CONTAINER=1" >> ~/.bash_profile
 docker mcp catalog pull mcp/docker-mcp-catalog:latest
+profiles/build.sh
+
+# now configure your AI client to include the following STDIO MCPs
+# bin/docker-mcp-gateway-run.sh fsrw
+# bin/docker-mcp-gateway-run.sh fsro
+# bin/docker-mcp-gateway-run.sh git
+# bin/docker-mcp-gateway-run.sh web
 ```
 
 For full setup, profile management, and server configuration see **[docs/mcp/SETUP.md](docs/mcp/SETUP.md)**.

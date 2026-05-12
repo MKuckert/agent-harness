@@ -3,6 +3,8 @@ id: fsro
 name: fsro
 servers:
     - type: image
+      config:
+        enable_roots: false
       secrets: default
       tools:
         - directory_tree
