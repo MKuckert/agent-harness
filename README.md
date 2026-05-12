@@ -19,7 +19,7 @@
 
 ### Tool Permissions by Agent
 
-| Agent            | filesystem         | filesystem (readonly) | git | execute processes | search | fetch | context7 |
+| Agent            | filesystem         | filesystem (readonly) | git | execute processes (WIP!) | search | fetch | context7 |
 |------------------|--------------------|-----------------------|-----|-------------------|--------|----------|-------|
 | 🧠 **Planner**    | ☑️ (`PLAN.md` only) |                       |     |                   |        |          |       |
 | 🧠 **Builder**    | ☑️                  |                       |     | ☑️                 |        |          |       |

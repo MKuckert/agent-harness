@@ -1,18 +1,10 @@
 ---
 description: "Software developer implementing a PLAN.md"
 mode: primary
-model: google/fast-cheap
+model: github-copilot/gemini-3-flash-preview
+effort: medium
 permission:
-  read: allow
-  edit: allow
-  glob: allow
-  list: allow
-  task: allow
-  bash: allow
-  webfetch: deny
-  websearch: deny
-  todowrite: deny
-  external_directory: deny
+  fsrw_*: allow
 color: "#00AA00"
 steps: 50
 ---

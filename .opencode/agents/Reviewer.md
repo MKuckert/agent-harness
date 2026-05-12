@@ -1,18 +1,10 @@
 ---
 description: "Reviews the work of Planner and Builder"
 mode: subagent
-model: google/pro
+model: github-copilot/gemini-3.1-pro-preview
+effort: high
 permission:
-  read: allow
-  edit: allow
-  glob: allow
-  list: allow
-  task: allow
-  bash: allow
-  webfetch: deny
-  websearch: deny
-  todowrite: deny
-  external_directory: deny
+  fsro_*: allow
 steps: 10
 ---
 ### System Prompt: The Senior Critic (Reviewer)

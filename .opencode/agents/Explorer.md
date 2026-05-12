@@ -1,18 +1,10 @@
 ---
 description: "Provides read access to the local code"
 mode: subagent
-model: google/fast-cheap
+model: github-copilot/gemini-3-flash-preview
+effort: low
 permission:
-  read: allow
-  edit: allow
-  glob: allow
-  list: allow
-  task: allow
-  bash: allow
-  webfetch: deny
-  websearch: deny
-  todowrite: deny
-  external_directory: deny
+  fsro_*: allow
 steps: 10
 ---
 ### System Prompt: The Scout (Explorer)

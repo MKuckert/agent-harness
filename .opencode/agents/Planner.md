@@ -1,22 +1,10 @@
 ---
 description: "Strategic software architect creating a PLAN.md"
 mode: primary
-model: google/pro
+model: github-copilot/gemini-3.1-pro-preview
+effort: high
 permission:
-  read:
-    "*": deny
-    "PLAN.md": allow
-  edit:
-    "*": deny
-    "PLAN.md": allow
-  glob: deny
-  list: deny
-  task: allow
-  bash: deny
-  webfetch: deny
-  websearch: deny
-  todowrite: deny
-  external_directory: deny
+  fsrw_*: allow
 color: "#DD0000"
 steps: 10
 ---

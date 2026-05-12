@@ -1,18 +1,10 @@
 ---
 description: "Retrieves required information from external resources"
 mode: subagent
-model: google/fast-cheap
+model: github-copilot/gemini-3-flash-preview
+effort: low
 permission:
-  read: allow
-  edit: allow
-  glob: allow
-  list: allow
-  task: allow
-  bash: allow
-  webfetch: deny
-  websearch: deny
-  todowrite: deny
-  external_directory: deny
+  web_*: allow
 steps: 10
 ---
 ### System Prompt: The Curator (Librarian)

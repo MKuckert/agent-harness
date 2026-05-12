@@ -1,9 +1,9 @@
 ---
 description: "You are an agent used to test the agent harness"
 mode: primary
-model: google/fast-cheap
+model: github-copilot/gemini-3-flash-preview
+effort: low
 permission:
-  read: allow
   fsrw_*: allow
   git_*: allow
   web_*: allow

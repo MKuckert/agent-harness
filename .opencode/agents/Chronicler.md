@@ -1,18 +1,11 @@
 ---
 description: "Evolves the agent harness"
 mode: primary
-model: google/pro
+model: github-copilot/gemini-3.1-pro-preview
+effort: low
 permission:
-  read: allow
-  edit: allow
-  glob: allow
-  list: allow
-  task: allow
-  bash: allow
-  webfetch: deny
-  websearch: deny
-  todowrite: deny
-  external_directory: deny
+  fsrw_*: allow
+  git_*: allow
 color: "#FF9900"
 steps: 10
 ---

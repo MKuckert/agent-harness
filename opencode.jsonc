@@ -60,32 +60,4 @@
     // triggered when the same tool call repeats 3 times with identical input
     "doom_loop": "ask",
   },
-  "provider": {
-    "google": {
-      "models": {
-        "fast-cheap": {
-          "name": "Gemini Fast & Cheap (3.1 flash lite)",
-          "id": "gemini-3.1-flash-lite-preview",
-        },
-        "pro": {
-          "name": "Gemini Pro (3.1)",
-          "id": "gemini-3.1-pro-preview",
-        },
-      },
-    },
-
-    // Local models
-    "ollama": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama (local)",
-      "options": {
-        "baseURL": "http://127.0.0.1:11434/v1",
-      },
-      "models": {
-        "tiny": {
-          "name": "Tiny",
-        },
-      },
-    },
-  },
 }
