@@ -16,10 +16,25 @@
     },
   },
   "mcp": {
-    "test": {
-      "type": "remote",
+    "fsrw": {
+      "type": "local",
       "enabled": true,
-      "url": "http://localhost:8080/mcp",
+      "command": ["bin/docker-mcp-gateway-run.sh", "fsrw"],
+    },
+    "fsro": {
+      "type": "local",
+      "enabled": true,
+      "command": ["bin/docker-mcp-gateway-run.sh", "fsro"],
+    },
+    "git": {
+      "type": "local",
+      "enabled": true,
+      "command": ["bin/docker-mcp-gateway-run.sh", "git"],
+    },
+    "web": {
+      "type": "local",
+      "enabled": true,
+      "command": ["bin/docker-mcp-gateway-run.sh", "web"],
     },
   },
   // See https://opencode.ai/docs/permissions/

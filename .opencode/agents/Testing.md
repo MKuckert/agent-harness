@@ -4,7 +4,9 @@ mode: primary
 model: google/fast-cheap
 permission:
   read: allow
-  test_*: allow
+  fsrw_*: allow
+  git_*: allow
+  web_*: allow
 color: "#DD8800"
 steps: 10
 ---

@@ -46,8 +46,8 @@ docker mcp catalog pull mcp/docker-mcp-catalog:latest
 
 For full setup, profile management, and server configuration see **[docs/mcp/SETUP.md](docs/mcp/SETUP.md)**.
 
-## MCP Reference
+## Reference
 
+- [Profiles](docs/mcp/PROFILES.md) — available profiles created from servers (and their tools)
 - [Servers](docs/mcp/SERVERS.md) — available MCP servers and their sources
 - [Tools](docs/mcp/TOOLS.md) — full tool catalogue with signatures and descriptions
-- [Profiles](docs/mcp/PROFILES.md) — available profiles created from servers (and their tools)
