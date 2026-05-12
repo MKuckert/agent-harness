@@ -1,0 +1,155 @@
+version: 1
+id: git
+name: git
+servers:
+    - type: image
+      secrets: default
+      tools:
+        - git_add
+        - git_checkout
+        - git_commit
+        - git_diff
+        - git_diff_staged
+        - git_diff_unstaged
+        - git_log
+        - git_show
+        - git_status
+      image: mcp/git@sha256:ad6af958e79466a14b895891e772fdda28fdc12c06fff4a70637b66773303a2c
+      catalog_ref: mcp/docker-mcp-catalog:latest
+      snapshot:
+        server:
+            name: git
+            type: server
+            image: mcp/git@sha256:ad6af958e79466a14b895891e772fdda28fdc12c06fff4a70637b66773303a2c
+            description: Git repository interaction and automation.
+            title: Git (Reference)
+            icon: https://avatars.githubusercontent.com/u/18133?s=200&v=4
+            readme: http://desktop.docker.com/mcp/catalog/v3/readme/git.md
+            remote: {}
+            volumes:
+                - '{{git.paths|volume|into}}'
+            tools:
+                - name: git_add
+                  description: Adds file contents to the staging area
+                  arguments:
+                    - name: files
+                      type: array
+                      items:
+                        type: string
+                      desc: ""
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_checkout
+                  description: Switches branches
+                  arguments:
+                    - name: branch_name
+                      type: string
+                      desc: ""
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_commit
+                  description: Records changes to the repository
+                  arguments:
+                    - name: message
+                      type: string
+                      desc: ""
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_create_branch
+                  description: Creates a new branch from an optional base branch
+                  arguments:
+                    - name: branch_name
+                      type: string
+                      desc: ""
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                    - name: base_branch
+                      type: string
+                      desc: ""
+                      optional: true
+                - name: git_diff
+                  description: Shows differences between branches or commits
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                    - name: target
+                      type: string
+                      desc: ""
+                - name: git_diff_staged
+                  description: Shows changes that are staged for commit
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_diff_unstaged
+                  description: Shows changes in the working directory that are not yet staged
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_init
+                  description: Initialize a new Git repository
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_log
+                  description: Shows the commit logs
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                    - name: max_count
+                      type: integer
+                      desc: ""
+                      optional: true
+                - name: git_reset
+                  description: Unstages all staged changes
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                - name: git_show
+                  description: Shows the contents of a commit
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+                    - name: revision
+                      type: string
+                      desc: ""
+                - name: git_status
+                  description: Shows the working tree status
+                  arguments:
+                    - name: repo_path
+                      type: string
+                      desc: ""
+            config:
+                - description: The MCP server is allowed to access these paths
+                  name: git
+                  properties:
+                    paths:
+                        items:
+                            type: string
+                        type: array
+                  required:
+                    - paths
+                  type: object
+            metadata:
+                pulls: 102709
+                stars: 29
+                githubStars: 85119
+                category: devops
+                tags:
+                    - gitl
+                    - devops
+                license: Other
+                owner: modelcontextprotocol
+secrets:
+    default:
+        provider: docker-desktop-store

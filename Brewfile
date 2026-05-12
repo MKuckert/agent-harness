@@ -8,3 +8,6 @@ brew "docker-buildx"
 
 ## MCP tool
 brew "f/mcptools/mcp"
+
+## Utility
+brew "jq"
