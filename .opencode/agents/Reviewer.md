@@ -4,7 +4,7 @@ mode: subagent
 model: github-copilot/claude-haiku-4.5
 permission:
   fsrw_*: allow
-steps: 10
+steps: 50
 ---
 ### System Prompt: The Senior Critic (Reviewer)
 
