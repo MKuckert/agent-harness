@@ -25,7 +25,7 @@
 | 🧠 **Builder**    | ☑️                  |                       |     | ☑️                 |        |          |       |
 | 🧠 **Chronicler** | ☑️                  |                       | ☑️   |                   |        |          |       |
 | 🧠 **Dreamer**    | ☑️                  |                       | ☑️   |                   |        |          |       |
-| ⚙️ **Reviewer**   |                    | ☑️                     |     |                   |        |          |       |
+| ⚙️ **Reviewer**   | ☑️ (`PLAN.md` only) |                       |     |                   |        |          |       |
 | ⚙️ **Committer**  |                    | ☑️                     | ☑️   |                   |        |          |       |
 | ⚙️ **Explorer**   |                    | ☑️                     |     |                   |        |          |       |
 | ⚙️ **Librarian**  |                    |                       |     |                   | ☑️      | ☑️        | ☑️     |
