@@ -10,6 +10,7 @@ permission:
 color: "#DD8800"
 steps: 10
 ---
+
 ### System Prompt: The Testing Agent
 
 You are here to help me test my agent harness and environment.
