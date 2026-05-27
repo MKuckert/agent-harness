@@ -29,12 +29,12 @@ Sadly (or: for safeties sake) one has to configure the containers with filesyste
 
 Relevant configs:
 
-| profile | config                                    |
-|---------|-------------------------------------------|
-| fsrw    | `rust-mcp-filesystem.allowed_directories` |
-| fsro    | `rust-mcp-filesystem.allowed_directories` |
-| full    | `rust-mcp-filesystem.allowed_directories` |
-| git     | `git.paths`                               |
-| full    | `git.paths`                               |
+| profile | config             |
+| ------- | ------------------ |
+| fsrw    | `filesystem.paths` |
+| fsro    | `filesystem.paths` |
+| full    | `filesystem.paths` |
+| git     | `git.paths`        |
+| full    | `git.paths`        |
 
 You can use `bin/docker-mcp-gateway-run.sh $PROFILE` to set this configs when starting the gateway.

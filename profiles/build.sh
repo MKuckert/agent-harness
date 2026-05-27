@@ -18,7 +18,7 @@ declare -A SERVERS
 SERVERS["context7"]=context7
 SERVERS["fetch"]=fetch
 SERVERS["git"]=git
-SERVERS["filesystem"]=rust-mcp-filesystem
+SERVERS["filesystem"]=filesystem
 SERVERS["search"]=duckduckgo
 declare -A CATALOG
 CATALOG["context7"]=catalog://mcp/docker-mcp-catalog/${SERVERS["context7"]}
@@ -55,18 +55,13 @@ dmp tools $profile --enable ${SERVERS["filesystem"]}.create_directory
 dmp tools $profile --enable ${SERVERS["filesystem"]}.directory_tree
 dmp tools $profile --enable ${SERVERS["filesystem"]}.edit_file
 dmp tools $profile --enable ${SERVERS["filesystem"]}.get_file_info
-dmp tools $profile --enable ${SERVERS["filesystem"]}.head_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.list_allowed_directories
 dmp tools $profile --enable ${SERVERS["filesystem"]}.list_directory
 dmp tools $profile --enable ${SERVERS["filesystem"]}.move_file
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_file_lines
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_multiple_text_files
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_text_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.read_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.read_multiple_files
 dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files
-dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files_content
-dmp tools $profile --enable ${SERVERS["filesystem"]}.tail_file
 dmp tools $profile --enable ${SERVERS["filesystem"]}.write_file
-dmp config $profile --set ${SERVERS["filesystem"]}.enable_roots=false
-dmp config $profile --set ${SERVERS["filesystem"]}.allow_write=true
 
 # Readonly filesystem
 profile=fsro
@@ -74,15 +69,11 @@ dmp server add $profile --server ${CATALOG["filesystem"]}
 dmp tools $profile --disable-all ${SERVERS["filesystem"]}
 dmp tools $profile --enable ${SERVERS["filesystem"]}.directory_tree
 dmp tools $profile --enable ${SERVERS["filesystem"]}.get_file_info
-dmp tools $profile --enable ${SERVERS["filesystem"]}.head_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.list_allowed_directories
 dmp tools $profile --enable ${SERVERS["filesystem"]}.list_directory
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_file_lines
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_multiple_text_files
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_text_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.read_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.read_multiple_files
 dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files
-dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files_content
-dmp tools $profile --enable ${SERVERS["filesystem"]}.tail_file
-dmp config $profile --set ${SERVERS["filesystem"]}.enable_roots=false
 
 # Git repository
 profile=git
@@ -119,15 +110,12 @@ dmp tools $profile --enable ${SERVERS["filesystem"]}.create_directory
 dmp tools $profile --enable ${SERVERS["filesystem"]}.directory_tree
 dmp tools $profile --enable ${SERVERS["filesystem"]}.edit_file
 dmp tools $profile --enable ${SERVERS["filesystem"]}.get_file_info
-dmp tools $profile --enable ${SERVERS["filesystem"]}.head_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.list_allowed_directories
 dmp tools $profile --enable ${SERVERS["filesystem"]}.list_directory
 dmp tools $profile --enable ${SERVERS["filesystem"]}.move_file
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_file_lines
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_multiple_text_files
-dmp tools $profile --enable ${SERVERS["filesystem"]}.read_text_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.read_file
+dmp tools $profile --enable ${SERVERS["filesystem"]}.read_multiple_files
 dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files
-dmp tools $profile --enable ${SERVERS["filesystem"]}.search_files_content
-dmp tools $profile --enable ${SERVERS["filesystem"]}.tail_file
 dmp tools $profile --enable ${SERVERS["filesystem"]}.write_file
 dmp server add $profile --server ${CATALOG["git"]}
 dmp tools $profile --disable-all ${SERVERS["git"]}

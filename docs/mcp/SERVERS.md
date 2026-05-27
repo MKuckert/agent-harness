@@ -22,11 +22,11 @@ Git repository operations.
 
 Uses the docker-built [mcp server](https://hub.docker.com/mcp/server/git/overview).
 
-## [filesystem](https://github.com/rust-mcp-stack/rust-mcp-filesystem)
+## [filesystem](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem)
 
 Sandboxed filesystem read/write access.  
 
-Uses the docker-built [mcp server](https://hub.docker.com/mcp/server/rust-mcp-filesystem/overview).
+Uses the docker-built [mcp server](https://hub.docker.com/mcp/server/filesystem/overview).
 
 ## [shell](https://github.com/sonirico/mcp-shell)
 

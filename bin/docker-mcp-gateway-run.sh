@@ -22,19 +22,14 @@ if [[ ! -d "$WORK_PATH" ]]; then
 fi
 
 case "$PROFILE" in
-  fsro)
-    docker mcp profile config "$PROFILE" --set rust-mcp-filesystem.allowed_directories="$WORK_PATH"
-    ;;
-  fsrw)
-    docker mcp profile config "$PROFILE" --set rust-mcp-filesystem.allowed_directories="$WORK_PATH"
-    docker mcp profile config "$PROFILE" --set rust-mcp-filesystem.allow_write=true
+  fsro|fsrw)
+    docker mcp profile config "$PROFILE" --set filesystem.paths="$WORK_PATH"
     ;;
   git)
     docker mcp profile config "$PROFILE" --set git.paths="$WORK_PATH"
     ;;
   full)
-    docker mcp profile config "$PROFILE" --set rust-mcp-filesystem.allowed_directories="$WORK_PATH"
-    docker mcp profile config "$PROFILE" --set rust-mcp-filesystem.allow_write=true
+    docker mcp profile config "$PROFILE" --set filesystem.paths="$WORK_PATH"
     docker mcp profile config "$PROFILE" --set git.paths="$WORK_PATH"
     ;;
 esac
