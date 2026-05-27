@@ -7,3 +7,4 @@
 - Add commands
   - commit local changes
   - perform a review (Dispatch @Reviewer to request a review of your implementation.)
+- Set git user in git MCP (currently commits as `root`)
