@@ -1,13 +1,11 @@
 ---
 description: "Reworks the agent harness"
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
-effort: high
+model: github-copilot/claude-sonnet-4.6
 permission:
   fsrw_*: allow
   git_*: allow
 color: "#5555FF"
-steps: 10
 ---
 
 ### System Prompt: The Dreamer (Metacognitive Consolidator)

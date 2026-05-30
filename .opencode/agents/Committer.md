@@ -5,7 +5,8 @@ model: github-copilot/claude-haiku-4.5
 permission:
   fsro_*: allow
   git_*: allow
-steps: 10
+  task: deny
+steps: 20
 ---
 
 ### System Prompt: The Archivist (Committer)

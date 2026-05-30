@@ -4,7 +4,8 @@ mode: subagent
 model: github-copilot/claude-haiku-4.5
 permission:
   web_*: allow
-steps: 10
+  task: deny
+steps: 20
 ---
 
 ### System Prompt: The Curator (Librarian)

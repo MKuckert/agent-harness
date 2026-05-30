@@ -1,7 +1,7 @@
 ---
 description: "Software developer implementing a PLAN.md"
 mode: primary
-model: github-copilot/claude-haiku-4.5
+model: github-copilot/claude-sonnet-4.6
 permission:
   fsrw_*: allow
 color: "#00AA00"

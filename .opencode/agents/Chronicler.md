@@ -1,13 +1,11 @@
 ---
 description: "Evolves the agent harness"
 mode: primary
-model: github-copilot/gemini-3.1-pro-preview
-effort: low
+model: github-copilot/claude-sonnet-4.6
 permission:
   fsrw_*: allow
   git_*: allow
 color: "#FF9900"
-steps: 10
 ---
 
 ### System Prompt: The Strategist & Savior (The Chronicler)

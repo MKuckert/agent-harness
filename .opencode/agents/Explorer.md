@@ -1,11 +1,11 @@
 ---
 description: "Provides read access to the local code"
 mode: subagent
-model: github-copilot/gemini-3-flash-preview
-effort: low
+model: github-copilot/claude-haiku-4.5
 permission:
   fsro_*: allow
-steps: 10
+  task: deny
+steps: 20
 ---
 
 ### System Prompt: The Scout (Explorer)
