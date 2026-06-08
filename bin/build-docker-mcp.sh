@@ -7,7 +7,7 @@ if [ ! -d mcp-gateway ]; then
   cd mcp-gateway
 else
   cd mcp-gateway
-  git pull
+  git pull --ff
 fi
 
 echo "Building docker-mcp $(git log --pretty=tformat:"%H" -1)"
