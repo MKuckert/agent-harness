@@ -1,63 +1,64 @@
 {
   "$schema": "https://opencode.ai/config.json",
-
+  "plugin": ["spotme"],
   "agent": {
     "build": {
       "disable": true,
+      "mode": "primary",
     },
     "plan": {
       "disable": true,
+      "mode": "primary",
     },
     "general": {
       "disable": true,
+      "mode": "subagent",
     },
     "explore": {
       "disable": true,
+      "mode": "subagent",
+    },
+
+    // System agents
+    "compaction": {
+      "mode": "primary",
+      "hidden": true,
+    },
+    "title": {
+      "mode": "primary",
+      "hidden": true,
+      "model": "manifest/small",
+    },
+    "summary": {
+      "mode": "primary",
+      "hidden": true,
+      "model": "manifest/small",
     },
   },
   "mcp": {
-    "fsrw": {
-      "type": "local",
-      "enabled": true,
-      "command": ["bin/docker-mcp-gateway-run.sh", "fsrw"],
-    },
-    "fsro": {
-      "type": "local",
-      "enabled": true,
-      "command": ["bin/docker-mcp-gateway-run.sh", "fsro"],
-    },
-    "git": {
-      "type": "local",
-      "enabled": true,
-      "command": ["bin/docker-mcp-gateway-run.sh", "git"],
-    },
     "web": {
       "type": "local",
       "enabled": true,
       "command": ["bin/docker-mcp-gateway-run.sh", "web"],
     },
   },
-  // See https://opencode.ai/docs/permissions/
   "permission": {
-    // Permissive by default
-    "*": "deny",
-    "skill": "deny",
-
-    // we use containerized MCP server instead of buildin operations
-    "read": "deny",
-    "edit": "deny",
-    "glob": "deny",
-    "grep": "deny",
-    "list": "deny",
-    "bash": "deny",
     "webfetch": "deny",
     "websearch": "deny",
-    "todowrite": "deny",
-
-    // launching subagents (matches the subagent type)
-    "task": "allow",
-
-    // triggered when the same tool call repeats 3 times with identical input
-    "doom_loop": "ask",
+  },
+  "formatter": true,
+  "compaction": {
+    "auto": true,
+    "prune": true,
+  },
+  // Disables the snapshot feature to roll back agent changes as I'm not using it anyway
+  "snapshot": false,
+  "experimental": {
+    "quotaToast": {
+      "enableToast": false,
+    },
+    "batch_tool": true,
+    "disable_paste_summary": true,
+    "mcp_timeout": 600000,
   },
 }
