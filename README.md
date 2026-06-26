@@ -2,36 +2,43 @@
 
 ## Agents
 
-| Agent                                               | Description                                                                                                                                                                            |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [🧠 **Planner**](.opencode/agents/Planner.md)       | Strategic software architect that interrogates requirements, consults Explorer & Librarian, and produces a structured `PLAN.md` before any code is written.                            |
-| [🧠 **Builder**](.opencode/agents/Builder.md)       | Software developer that implements tasks defined in `PLAN.md` one at a time, validates with linters/tests, and triggers the Committer after each unit.                                 |
-| [🧠 **Chronicler**](.opencode/agents/Chronicler.md) | Knowledge manager and evolution specialist that writes post-mortems, rescues stalled processes, archives `PLAN.md`, and proposes harness improvements.                                 |
-| [🧠 **Dreamer**](.opencode/agents/Dreamer.md)       | Metacognitive consolidator that audits `AGENTS.md` and archived plans for redundancies and inconsistencies, then proposes and applies structural improvements after user confirmation. |
-| [⚙️ **Reviewer**](.opencode/agents/Reviewer.md)     | Senior critic and sole authority to mark tasks `[x]` in `PLAN.md`; reviews both the plan (Mode 1) and the implementation (Mode 2) for correctness, security, and plan compliance.      |
-| [⚙️ **Committer**](.opencode/agents/Committer.md)   | Specialized Git sub-agent that stages and commits changes using Conventional Commits; triggered by the Builder after every successful change.                                          |
-| [⚙️ **Explorer**](.opencode/agents/Explorer.md)     | Read-only code analyst that maps the existing codebase, identifies entry points and dependencies, and reports precise findings to Planner and Builder.                                 |
-| [⚙️ **Librarian**](.opencode/agents/Librarian.md)   | Information specialist that fetches external documentation, API references, and best practices from the web and synthesizes them for Planner and Builder.                              |
-| [🧠 **Testing**](.opencode/agents/Testing.md)       | Minimal agent used to test and validate the agent harness and its environment.                                                                                                         |
+| Agent                                                                      | Description                                                                                                                                                 |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [🧠 **Planner**](.opencode/agents/Planner.md)                              | Strategic software architect that interrogates requirements, consults Explorer & Librarian, and produces a structured `PLAN.md` before any code is written. |
+| [🧠 **Builder**](.opencode/agents/Builder.md)                              | Software developer that implements tasks defined in `PLAN.md` one at a time, validates with linters/tests, and triggers the Committer after each unit.      |
+| [🧠 **Buddy**](.opencode/agents/Buddy.md)                                  | Technical assistant for coding, debugging, and development tasks; provides code snippets, explanations, and pragmatic guidance on demand.                   |
+| [⚙️ **Plan Reviewer**](.opencode/agents/PlanReviewer.md)                   | Reviews the Planner's work for completeness, feasibility, and architectural soundness; sole authority to approve `PLAN.md` before Builder starts.           |
+| [⚙️ **Code Reviewer**](.opencode/agents/CodeReviewer.md)                   | Reviews the Builder's implementation for correctness, security, and plan compliance; sole authority to mark tasks `[x]` in `PLAN.md`.                       |
+| [⚙️ **Committer**](.opencode/agents/Committer.md)                          | Specialized Git sub-agent that stages and commits changes using Conventional Commits; triggered by the Builder after every successful change.               |
+| [⚙️ **Explorer**](.opencode/agents/Explorer.md)                            | Read-only code analyst that maps the existing codebase, identifies entry points and dependencies, and reports precise findings to Planner and Builder.      |
+| [⚙️ **Librarian**](.opencode/agents/Librarian.md)                          | Information specialist that fetches external documentation, API references, and best practices from the web and synthesizes them for Planner and Builder.   |
+| [🧠 **Documentation Engineer**](.opencode/agents/DocumentationEngineer.md) | Specialized agent for writing, organizing, and maintaining technical documentation and guides.                                                              |
+| [🧠 **Testing**](.opencode/agents/Testing.md)                              | Minimal agent used to test and validate the agent harness and its environment.                                                                              |
 
 - 🧠: Primary agent — can spawn sub-agents
 - ⚙️: Sub-agent
 
 ### Tool Permissions by Agent
 
-| Agent             | filesystem          | filesystem (readonly) | git | execute processes (WIP!) | search | fetch | context7 |
-| ----------------- | ------------------- | --------------------- | --- | ------------------------ | ------ | ----- | -------- |
-| 🧠 **Planner**    | ☑️ (`PLAN.md` only) |                       |     |                          |        |       |          |
-| 🧠 **Builder**    | ☑️                  |                       |     | ☑️                       |        |       |          |
-| 🧠 **Chronicler** | ☑️                  |                       | ☑️  |                          |        |       |          |
-| 🧠 **Dreamer**    | ☑️                  |                       | ☑️  |                          |        |       |          |
-| ⚙️ **Reviewer**   | ☑️ (`PLAN.md` only) |                       |     |                          |        |       |          |
-| ⚙️ **Committer**  |                     | ☑️                    | ☑️  |                          |        |       |          |
-| ⚙️ **Explorer**   |                     | ☑️                    |     |                          |        |       |          |
-| ⚙️ **Librarian**  |                     |                       |     |                          | ☑️     | ☑️    | ☑️       |
-| 🧠 **Testing**    | ☑️                  | ☑️                    | ☑️  | ☑️                       | ☑️     | ☑️    | ☑️       |
+| Agent                        | read | edit | grep | glob | bash    | task | web | skill |
+| ---------------------------- | ---- | ---- | ---- | ---- | ------- | ---- | --- | ----- |
+| 🧠 **Planner**               |      | ✓\*  |      |      |         | ✓    |     | ✓     |
+| 🧠 **Builder**               | ✓    | ✓    | ✓    | ✓    | ✓\*\*   | ✓    |     | ✓     |
+| 🧠 **Buddy**                 | ✓    | ✓    | ✓    | ✓    | ✓\*\*   | ✓    |     | ✓     |
+| ⚙️ **PlanReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓    |     | ✓     |
+| ⚙️ **CodeReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓    |     | ✓     |
+| ⚙️ **Committer**             | ✓    |      | ✓    | ✓    | ✓\*\*\* |      |     | ✓     |
+| ⚙️ **Explorer**              | ✓    | ✓†   | ✓    | ✓    |         |      |     | ✓     |
+| ⚙️ **Librarian**             |      |      |      |      |         |      | ✓   | ✓     |
+| 🧠 **DocumentationEngineer** | ✓    | ✓    | ✓    | ✓    |         | ✓    |     | ✓     |
+| 🧠 **Testing**               | ✓    | ✓    | ✓    | ✓    | ✓       | ✓    | ✓   | ✓     |
 
-**Note: "execute processes" is not implemented right now!**
+**Legend:**
+
+- `*` = PLAN.md only
+- `**` = Selective (git commands denied)
+- `***` = Git commands only (status, add, commit)
+- `†` = PROJECT_MAP.md only
 
 ## Setup
 
