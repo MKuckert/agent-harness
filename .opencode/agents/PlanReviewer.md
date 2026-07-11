@@ -1,7 +1,7 @@
 ---
 description: "Reviews the work of Planner"
 mode: subagent
-model: manifest/complex
+model: manifest/ultra
 permission:
   read: allow
   edit:
@@ -11,7 +11,6 @@ permission:
   glob: allow
   list: allow
   bash: deny
-  android_*: deny
   question: deny
   task:
     "*": deny
@@ -20,7 +19,6 @@ permission:
   web_*: deny
   skill:
     "*": allow
-    supabase-postgres-best-practices: deny
   todowrite: deny
   doom_loop: allow
 steps: 500

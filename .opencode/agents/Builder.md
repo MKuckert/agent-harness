@@ -1,7 +1,7 @@
 ---
 description: "Software developer implementing a PLAN.md"
 mode: primary
-model: manifest/medium
+model: manifest/complex
 permission:
   read: allow
   edit: allow
@@ -10,13 +10,11 @@ permission:
   list: allow
   bash:
     "*": deny
-  android_*: allow
   question: allow
   task: allow
   web_*: deny
   skill:
     "*": allow
-    supabase-postgres-best-practices: deny
   todowrite: deny
   doom_loop: allow
 color: "#00AA00"

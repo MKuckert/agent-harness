@@ -1,7 +1,7 @@
 ---
 description: "Provides read access to the local code"
 mode: subagent
-model: manifest/small
+model: manifest/medium
 permission:
   read: allow
   edit:
@@ -11,7 +11,6 @@ permission:
   glob: allow
   list: allow
   bash: deny
-  android_*: deny
   question: deny
   task: deny
   web_*: deny

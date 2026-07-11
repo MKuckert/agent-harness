@@ -1,7 +1,7 @@
 ---
 description: "Use this agent as your technical assistant for talking about coding, debugging and development tasks."
 mode: primary
-model: manifest/medium
+model: manifest/ultra
 permission:
   read: allow
   edit: allow
@@ -14,10 +14,8 @@ permission:
   question: allow
   task: allow
   web_*: deny
-  android_*: allow
   skill:
     "*": allow
-    supabase-postgres-best-practices: deny
   todowrite: deny
   doom_loop: allow
 color: "#00AA00"
