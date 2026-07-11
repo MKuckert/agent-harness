@@ -99,11 +99,17 @@ cmd_status() {
     echo "main:  $MAIN"
     echo "base:  ${BASE:0:12}    main HEAD: ${head:0:12}"
     echo
-    echo "== incoming (main since base, would arrive on 'pull') =="
-    git -C "$MAIN" diff --stat "$BASE" "$head" -- $PATHS || true
+    echo "== incoming (effective changes a 'pull' would make) =="
+    local wt; wt=$(project_snapshot_worktree)
+    ( cd "$wt" && git -c user.name=harness-sync -c user.email=sync@localhost \
+          commit --quiet --allow-empty -m "project snapshot" )
+    git -C "$MAIN" diff "$BASE" "$head" -- $PATHS \
+        | git -C "$wt" apply --3way --whitespace=nowarn 2>/dev/null || true
+    ( cd "$wt" && git diff HEAD --stat ) || true
+    drop_worktree "$wt"
     echo
     echo "== outgoing (project vs base, would leave on 'push') =="
-    local wt; wt=$(project_snapshot_worktree)
+    wt=$(project_snapshot_worktree)
     ( cd "$wt" && git diff --cached --stat ) || true
     drop_worktree "$wt"
 }
@@ -115,15 +121,40 @@ cmd_pull() {
         note "already up to date with main (${BASE:0:12})"
         exit 0
     fi
+
+    # 3-way merge in a temp worktree: start from the project's CURRENT files
+    # (committed as a snapshot on top of base), merge in main's base..HEAD
+    # changes via git apply --3way, then diff the merge result against the
+    # snapshot. The reviewed patch therefore contains only the *effective*
+    # changes for this project — hunks you already have (e.g. from a previous
+    # push, or identical local edits) disappear instead of breaking apply.
+    local wt; wt=$(project_snapshot_worktree)
+    ( cd "$wt" && git -c user.name=harness-sync -c user.email=sync@localhost \
+          commit --quiet --allow-empty -m "project snapshot" )
+    local conflicts=0
+    git -C "$MAIN" diff "$BASE" "$head" -- $PATHS \
+        | git -C "$wt" apply --3way --whitespace=nowarn || conflicts=1
+
     local patch; patch=$(mktemp /tmp/harness-pull.XXXXXX.patch)
-    git -C "$MAIN" diff "$BASE" "$head" -- $PATHS > "$patch"
+    git -C "$wt" diff HEAD > "$patch"
+    drop_worktree "$wt"
+
+    if [[ ! -s $patch ]]; then
+        rm -f "$patch"
+        BASE=$head; save_state
+        note "project already contains main's changes — base fast-forwarded to ${BASE:0:12}"
+        exit 0
+    fi
+    [[ $conflicts -eq 1 ]] && \
+        note "some hunks conflict: patch contains '<<<<<<<' markers — resolve them in the editor or after applying"
+
     if review_patch "$patch" "main -> project"; then
-        # patch --merge does a 3-way-style apply: clean hunks go in,
-        # conflicts get <<<<<<< markers instead of .rej files.
-        if patch -p1 --merge --no-backup-if-mismatch < "$patch"; then
+        # The patch was generated against the exact current project state,
+        # so a plain apply suffices (unless you hand-edited hunks).
+        if patch -p1 --no-backup-if-mismatch < "$patch"; then
             note "applied cleanly"
         else
-            note "applied WITH CONFLICTS — search for '<<<<<<<' markers"
+            note "some hunks failed (patch was hand-edited?) — check *.rej files"
         fi
         BASE=$head
         save_state
