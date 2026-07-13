@@ -1,7 +1,7 @@
 ---
 description: "Retrieves required information from external resources"
 mode: subagent
-model: manifest/small
+model: manifest/medium
 permission:
   read: deny
   edit: deny
@@ -9,13 +9,11 @@ permission:
   glob: deny
   list: deny
   bash: deny
-  android_*: deny
   question: deny
   task: deny
   web_*: allow
   skill:
     "*": allow
-    supabase-postgres-best-practices: deny
   todowrite: deny
   doom_loop: allow
 steps: 200
