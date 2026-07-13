@@ -6,13 +6,23 @@
 # against that base, so both directions are 3-way-aware.
 #
 # Commands (run from the project root):
-#   harness-sync init <main-repo-path> <path>...   record main repo + tracked paths
+#   harness-sync init [--name <n>] <main-repo-path> <path>...
+#                                                  record main repo + tracked paths,
+#                                                  register project in main's registry
 #   harness-sync status                            show pending drift in both directions
 #   harness-sync pull                              main -> project (review patch first)
 #   harness-sync push                              project -> main (review patch first)
 #
+# Commands (run from anywhere; use the registry in the main repo's .harness-sync):
+#   harness-sync projects                          list registered projects
+#   harness-sync forget <name>                     remove a project from the registry
+#
 # Tracked paths are relative to BOTH the project root and the main repo root,
 # e.g.:  harness-sync init ~/src/agent-harness .opencode opencode.json
+#
+# State files:
+#   project/.harness-sync:  main=<abs path>  name=<registry key>  base=<sha>  paths=<...>
+#   main/.harness-sync:     main=true        project[<name>]=<abs project path>
 set -euo pipefail
 
 STATE=".harness-sync"
@@ -21,9 +31,14 @@ EDITOR_BIN=${EDITOR:-vi}
 die() { echo "harness-sync: error: $*" >&2; exit 1; }
 note() { echo "harness-sync: $*"; }
 
+is_registry() { [[ -f $1 ]] && grep -qx 'main=true' "$1"; }
+
 load_state() {
     [[ -f $STATE ]] || die "no $STATE here — run 'harness-sync init' first"
+    is_registry "$STATE" && \
+        die "this is the MAIN repo (main=true); pull/push/status run from a project root"
     MAIN=$(sed -n 's/^main=//p' "$STATE")
+    NAME=$(sed -n 's/^name=//p' "$STATE")
     BASE=$(sed -n 's/^base=//p' "$STATE")
     PATHS=$(sed -n 's/^paths=//p' "$STATE")
     [[ -d $MAIN/.git || -f $MAIN/.git ]] || die "main repo not found at $MAIN"
@@ -31,7 +46,62 @@ load_state() {
 }
 
 save_state() {
-    printf 'main=%s\nbase=%s\npaths=%s\n' "$MAIN" "$BASE" "$PATHS" > "$STATE"
+    printf 'main=%s\nname=%s\nbase=%s\npaths=%s\n' "$MAIN" "$NAME" "$BASE" "$PATHS" > "$STATE"
+}
+
+# ---- registry (main repo's .harness-sync) -----------------------------------
+
+# Locate the registry file: inside the main repo if we're in a project,
+# in the current git toplevel if we're in the main repo itself.
+registry_file() {
+    if [[ -f $STATE ]] && ! is_registry "$STATE"; then
+        echo "$(sed -n 's/^main=//p' "$STATE")/$STATE"
+    else
+        local top; top=$(git rev-parse --show-toplevel 2>/dev/null) \
+            || die "not inside a git repo and no project $STATE found"
+        echo "$top/$STATE"
+    fi
+}
+
+registry_set() { # $1=registry-file $2=name $3=abs-path
+    local reg=$1 name=$2 path=$3 tmp
+    [[ $name =~ ^[A-Za-z0-9._-]+$ ]] || die "invalid project name '$name' (use A-Za-z0-9._-)"
+    local existing
+    existing=$(sed -n "s/^project\[$name\]=//p" "$reg" 2>/dev/null || true)
+    if [[ -n $existing && $existing != "$path" ]]; then
+        die "name '$name' already registered for $existing — pick another with --name"
+    fi
+    tmp=$(mktemp)
+    {
+        echo "main=true"
+        [[ -f $reg ]] && grep '^project\[' "$reg" | grep -v "^project\[$name\]=" || true
+        echo "project[$name]=$path"
+    } > "$tmp"
+    mv "$tmp" "$reg"
+}
+
+cmd_projects() {
+    local reg; reg=$(registry_file)
+    [[ -f $reg ]] || die "no registry at $reg"
+    is_registry "$reg" || die "$reg is not a main-repo registry (missing main=true)"
+    local line name path mark
+    grep '^project\[' "$reg" | while IFS= read -r line; do
+        name=${line#project[}; name=${name%%]=*}
+        path=${line#*=}
+        mark="ok"
+        [[ -f $path/$STATE ]] || mark="MISSING (no $STATE at path)"
+        printf '%-20s %s  [%s]\n' "$name" "$path" "$mark"
+    done
+    grep -q '^project\[' "$reg" || note "no projects registered"
+}
+
+cmd_forget() {
+    [[ $# -eq 1 ]] || die "usage: harness-sync forget <name>"
+    local reg; reg=$(registry_file)
+    [[ -f $reg ]] || die "no registry at $reg"
+    grep -q "^project\[$1\]=" "$reg" || die "no project named '$1' in $reg"
+    sed -i.bak "/^project\[$1\]=/d" "$reg" && rm -f "$reg.bak"
+    note "removed '$1' from $reg"
 }
 
 main_head() { git -C "$MAIN" rev-parse HEAD; }
@@ -77,18 +147,25 @@ project_snapshot_worktree() {
 }
 
 drop_worktree() {
-    git -C "$MAIN" worktree remove --force "$1" 2>/dev/null || safe-rm -rf "$1"
+    git -C "$MAIN" worktree remove --force "$1" 2>/dev/null || rm -rf "$1"
     git -C "$MAIN" worktree prune
 }
 
 cmd_init() {
-    [[ $# -ge 2 ]] || die "usage: harness-sync init <main-repo-path> <path>..."
+    NAME=""
+    if [[ ${1:-} == --name ]]; then
+        NAME=${2:-}; shift 2 || die "--name needs a value"
+    fi
+    [[ $# -ge 2 ]] || die "usage: harness-sync init [--name <n>] <main-repo-path> <path>..."
     MAIN=$(cd "$1" && pwd); shift
     [[ -d $MAIN/.git || -f $MAIN/.git ]] || die "$MAIN is not a git repo"
+    [[ -n $NAME ]] || NAME=$(basename "$PWD")
     PATHS=$*
     BASE=$(main_head)
+    registry_set "$MAIN/$STATE" "$NAME" "$PWD"
     save_state
     note "initialized: main=$MAIN base=${BASE:0:12} paths=[$PATHS]"
+    note "registered as project[$NAME] in $MAIN/$STATE"
     note "assuming project files currently match main@${BASE:0:12};"
     note "if not, run 'harness-sync status' to see the drift."
 }
@@ -165,8 +242,8 @@ cmd_pull() {
 
 cmd_push() {
     load_state
-    git -C "$MAIN" diff --quiet && git -C "$MAIN" diff --cached --quiet \
-        || die "main repo has uncommitted changes — commit or stash them first"
+    [[ -z $(git -C "$MAIN" status --porcelain -- $PATHS) ]] \
+        || die "main repo has uncommitted changes in [$PATHS] — commit or stash them first"
     local wt patch
     wt=$(project_snapshot_worktree)
     patch=$(mktemp /tmp/harness-push.XXXXXX.patch)
@@ -187,9 +264,11 @@ cmd_push() {
 }
 
 case ${1:-} in
-    init)   shift; cmd_init "$@" ;;
-    status) cmd_status ;;
-    pull)   cmd_pull ;;
-    push)   cmd_push ;;
-    *) sed -n '2,15p' "$0"; exit 1 ;;
+    init)     shift; cmd_init "$@" ;;
+    status)   cmd_status ;;
+    pull)     cmd_pull ;;
+    push)     cmd_push ;;
+    projects) cmd_projects ;;
+    forget)   shift; cmd_forget "$@" ;;
+    *) sed -n '2,23p' "$0"; exit 1 ;;
 esac
