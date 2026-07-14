@@ -3,7 +3,7 @@ description: Performs a code review against the current PLAN.md using the Code R
 agent: CodeReviewer
 ---
 
-Please review the latest code changes against our `PLAN.md`.
+Review the latest code changes against our `PLAN.md`.
 
 Ensure:
 1. All changes strictly align with the documented plan.

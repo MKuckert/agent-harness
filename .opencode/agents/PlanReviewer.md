@@ -7,6 +7,7 @@ permission:
   edit:
     "*": deny
     "PLAN.md": allow
+    tasks/*: allow
   grep: allow
   glob: allow
   list: allow

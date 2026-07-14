@@ -12,7 +12,10 @@ permission:
     "*": deny
     "git status": allow
     "git add *": allow
+    "git rm *": allow
     "git commit *": allow
+    "git diff *": allow
+    "git log *": allow
   question: deny
   task: deny
   web_*: deny
