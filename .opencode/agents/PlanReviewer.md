@@ -1,12 +1,13 @@
 ---
 description: "Reviews the work of Planner"
 mode: subagent
-model: manifest/ultra
+model: github-copilot/gpt-5.6-sol
+reasoningEffort: low
 permission:
   read: allow
   edit:
     "*": deny
-    "PLAN.md": allow
+    PLAN.md: allow
     tasks/*: allow
   grep: allow
   glob: allow

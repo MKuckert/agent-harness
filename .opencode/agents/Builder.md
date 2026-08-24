@@ -1,7 +1,8 @@
 ---
 description: "Software developer implementing a PLAN.md"
 mode: primary
-model: manifest/complex
+model: github-copilot/gpt-5.6-terra
+reasoningEffort: low
 permission:
   read: allow
   edit: allow
@@ -10,6 +11,7 @@ permission:
   list: allow
   bash:
     "*": deny
+    "nono why *": allow
   question: allow
   task: allow
   web_*: deny

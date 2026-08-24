@@ -1,7 +1,8 @@
 ---
 description: "Use this agent as your technical assistant for talking about coding, debugging and development tasks."
 mode: primary
-model: manifest/ultra
+model: github-copilot/gpt-5.6-sol
+reasoningEffort: low
 permission:
   read: allow
   edit: allow
@@ -10,6 +11,7 @@ permission:
   list: allow
   bash:
     "*": allow
+    "nono why *": allow
     git *: deny
   question: allow
   task: allow

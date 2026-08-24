@@ -1,7 +1,8 @@
 ---
 description: "Strategic software architect creating a PLAN.md"
 mode: primary
-model: manifest/ultra
+model: github-copilot/gpt-5.6-sol
+reasoningEffort: high
 permission:
   read:
     "*": deny

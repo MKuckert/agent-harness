@@ -1,7 +1,7 @@
 ---
 description: "Provides read access to the local code"
 mode: subagent
-model: manifest/medium
+model: github-copilot/gpt-5.6-luna
 permission:
   read: allow
   edit:

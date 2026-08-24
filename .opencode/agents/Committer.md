@@ -1,7 +1,7 @@
 ---
 description: "Commits changes to git"
 mode: subagent
-model: manifest/medium
+model: github-copilot/gpt-5.6-luna
 permission:
   read: allow
   edit: deny
@@ -10,7 +10,8 @@ permission:
   list: allow
   bash:
     "*": deny
-    "git status": allow
+    "nono why *": allow
+    "git status *": allow
     "git add *": allow
     "git rm *": allow
     "git commit *": allow

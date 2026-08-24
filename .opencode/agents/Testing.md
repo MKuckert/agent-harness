@@ -2,7 +2,7 @@
 description: "You are an agent used to test the agent harness"
 mode: primary
 disable: true
-model: manifest/ultra
+model: github-copilot/gpt-5.6-sol
 permission:
   "*": allow
 color: "#DD8800"

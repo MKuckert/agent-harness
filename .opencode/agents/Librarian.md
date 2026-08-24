@@ -1,7 +1,7 @@
 ---
 description: "Retrieves required information from external resources"
 mode: subagent
-model: manifest/medium
+model: github-copilot/gpt-5.6-luna
 permission:
   read: deny
   edit: deny
