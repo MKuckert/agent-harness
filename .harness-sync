@@ -2,3 +2,4 @@ main=true
 project[mcp-commands]=/Users/mkuckert/repos/mcp-commands
 project[grocery-shopping-app]=/Users/mkuckert/repos/grocery-shopping-app/feature/main
 project[ai-talks]=/Users/mkuckert/repos/ai-coe/my-talks
+project[env]=/Users/mkuckert/env
