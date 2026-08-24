@@ -68,5 +68,5 @@ For full setup, profile management, and server configuration see **[docs/mcp/SET
 
 ## License
 
-- The [`grill-me`](.opencode/skills/grill-me/SKILL.md) skill is from [Matt Pocock](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md) and licensed under MIT
+- The [`grill-me`](.opencode/skills/grill-me/SKILL.md) skill is from [Matt Pocock](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md) and licensed under MIT
 - The [`Documentation Engineer`](.opencode/agents/DocumentationEngineer.md) agent is from [Awesome Claude Code Subagents](https://github.com/VoltAgent/awesome-claude-code-subagents/) and licensed under MIT
