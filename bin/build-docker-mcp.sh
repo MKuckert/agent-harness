@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~/private/dev
+cd ~/repos
 
 if [ ! -d mcp-gateway ]; then
   git clone "git@github.com:docker/mcp-gateway.git"
