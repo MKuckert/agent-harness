@@ -3,11 +3,21 @@ description: "Retrieves required information from external resources"
 mode: subagent
 model: github-copilot/gpt-5.6-luna
 permission:
-  read: deny
-  edit: deny
-  grep: deny
-  glob: deny
-  list: deny
+  read:
+    "*": deny
+    "research/results/*.md": allow
+  edit:
+    "*": deny
+    "research/results/*.md": allow
+  grep:
+    "*": deny
+    "research/results/*.md": allow
+  glob:
+    "*": deny
+    "research/results/*.md": allow
+  list:
+    "*": deny
+    "research/results/*.md": allow
   bash: deny
   question: deny
   task: deny
