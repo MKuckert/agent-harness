@@ -1,8 +1,8 @@
 ---
 description: "Reviews the work of Planner"
 mode: subagent
-model: github-copilot/gpt-5.6-sol
-reasoningEffort: low
+model: github-copilot/claude-opus-5
+reasoningEffort: high
 permission:
   read: allow
   edit:

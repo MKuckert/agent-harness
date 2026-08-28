@@ -1,8 +1,8 @@
 ---
 description: "Software developer implementing a PLAN.md"
 mode: primary
-model: github-copilot/gpt-5.6-terra
-reasoningEffort: low
+model: github-copilot/claude-sonnet-5
+reasoningEffort: medium
 permission:
   read: allow
   edit: allow

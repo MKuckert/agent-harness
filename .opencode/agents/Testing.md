@@ -2,7 +2,8 @@
 description: "You are an agent used to test the agent harness"
 mode: primary
 disable: true
-model: github-copilot/gpt-5.6-sol
+model: github-copilot/claude-opus-5
+reasoningEffort: high
 permission:
   "*": allow
 color: "#DD8800"
