@@ -60,6 +60,25 @@ profiles/build.sh
 
 For full setup, profile management, and server configuration see **[docs/mcp/SETUP.md](docs/mcp/SETUP.md)**.
 
+## Agent models
+
+`bin/harness-models.sh` assigns one model to each stable agent role. It requires
+`bash`, `yq` with frontmatter support, and `opencode`.
+
+| Role | Agents |
+| --- | --- |
+| Helper | Explorer, Librarian, Committer |
+| Worker | Builder, Buddy, DocumentationEngineer |
+| Thinker | Planner, PlanReviewer, CodeReviewer, Testing |
+
+```sh
+bin/harness-models.sh anthropic [--dry-run]
+bin/harness-models.sh openai [--dry-run]
+bin/harness-models.sh set [--force] [--dry-run] helper/model[@effort] worker/model[@effort] thinker/model[@effort]
+bin/harness-models.sh models
+bin/harness-models.sh --version
+```
+
 ## Reference
 
 - [Profiles](docs/mcp/PROFILES.md) — available profiles created from servers (and their tools)
