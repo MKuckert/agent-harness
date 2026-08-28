@@ -11,3 +11,4 @@ brew "f/mcptools/mcp"
 
 ## Utility
 brew "jq"
+brew "yq"
