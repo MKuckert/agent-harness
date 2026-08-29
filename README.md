@@ -4,16 +4,17 @@
 
 | Agent                                                                      | Description                                                                                                                                                 |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [🧠 **Planner**](.opencode/agents/Planner.md)                              | Strategic software architect that interrogates requirements, consults Explorer & Librarian, and produces a structured `PLAN.md` before any code is written. |
-| [🧠 **Builder**](.opencode/agents/Builder.md)                              | Software developer that implements tasks defined in `PLAN.md` one at a time, validates with linters/tests, and triggers the Committer after each unit.      |
-| [🧠 **Buddy**](.opencode/agents/Buddy.md)                                  | Technical assistant for coding, debugging, and development tasks; provides code snippets, explanations, and pragmatic guidance on demand.                   |
-| [⚙️ **Plan Reviewer**](.opencode/agents/PlanReviewer.md)                   | Reviews the Planner's work for completeness, feasibility, and architectural soundness; sole authority to approve `PLAN.md` before Builder starts.           |
-| [⚙️ **Code Reviewer**](.opencode/agents/CodeReviewer.md)                   | Reviews the Builder's implementation for correctness, security, and plan compliance; sole authority to mark tasks `[x]` in `PLAN.md`.                       |
-| [⚙️ **Committer**](.opencode/agents/Committer.md)                          | Specialized Git sub-agent that stages and commits changes using Conventional Commits; triggered by the Builder after every successful change.               |
-| [⚙️ **Explorer**](.opencode/agents/Explorer.md)                            | Read-only code analyst that maps the existing codebase, identifies entry points and dependencies, and reports precise findings to Planner and Builder.      |
-| [⚙️ **Librarian**](.opencode/agents/Librarian.md)                          | Information specialist that fetches external documentation, API references, and best practices from the web and synthesizes them for Planner and Builder.   |
+| [🧠 **Orchestrator**](.opencode/agents/Orchestrator.md)                     | Single coordinator of the plan → implement → review → commit lifecycle; routes all lifecycle commands and enforces batching, retry, and concurrency rules.    |
+| [⚙️ **Planner**](.opencode/agents/Planner.md)                              | Strategic software architect (hidden subagent) that interrogates requirements, consults Explorer & Librarian, and produces a structured `PLAN.md`.           |
+| [⚙️ **Builder**](.opencode/agents/Builder.md)                              | Software developer (hidden subagent) that implements only the Orchestrator-supplied task scope; cannot edit `PLAN.md` or commit except during finalization.    |
+| [🧠 **Buddy**](.opencode/agents/Buddy.md)                                  | Default general-purpose technical assistant; delegates lifecycle intent to the Orchestrator, retains general assistance.                                    |
+| [⚙️ **Plan Reviewer**](.opencode/agents/PlanReviewer.md)                   | Reviews the Planner's work, including the dependency graph (IDs, cycles, ownership, overlap, validation); sole authority to approve `PLAN.md`.               |
+| [⚙️ **Code Reviewer**](.opencode/agents/CodeReviewer.md)                   | Reviews exactly one task-scope for correctness, security, and plan compliance; sole authority to mark tasks `[x]` in `PLAN.md`.                            |
+| [⚙️ **Committer**](.opencode/agents/Committer.md)                          | Git sub-agent that stages only explicitly supplied paths plus `PLAN.md`; aborts on ambiguous scope; triggered only during Orchestrator-authorized finalization. |
+| [⚙️ **Explorer**](.opencode/agents/Explorer.md)                            | Read-only code analyst that maps the existing codebase, identifies entry points and dependencies, and reports precise findings.                            |
+| [⚙️ **Librarian**](.opencode/agents/Librarian.md)                          | Information specialist that fetches external documentation and writes durable research notes under `docs/research/` only.                                  |
 | [🧠 **Documentation Engineer**](.opencode/agents/DocumentationEngineer.md) | Specialized agent for writing, organizing, and maintaining technical documentation and guides.                                                              |
-| [🧠 **Testing**](.opencode/agents/Testing.md)                              | Minimal agent used to test and validate the agent harness and its environment.                                                                              |
+| [⚙️ **Testing**](.opencode/agents/Testing.md)                              | Non-editing subagent that runs plan-approved validation commands for finished tasks; never modifies source, config, `PLAN.md`, or Git state.                 |
 
 - 🧠: Primary agent — can spawn sub-agents
 - ⚙️: Sub-agent
@@ -22,23 +23,68 @@
 
 | Agent                        | read | edit | grep | glob | bash    | task | web | skill |
 | ---------------------------- | ---- | ---- | ---- | ---- | ------- | ---- | --- | ----- |
-| 🧠 **Planner**               |      | ✓\*  |      |      |         | ✓    |     | ✓     |
-| 🧠 **Builder**               | ✓    | ✓    | ✓    | ✓    | ✓\*\*   | ✓    |     | ✓     |
-| 🧠 **Buddy**                 | ✓    | ✓    | ✓    | ✓    | ✓\*\*   | ✓    |     | ✓     |
-| ⚙️ **PlanReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓    |     | ✓     |
-| ⚙️ **CodeReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓    |     | ✓     |
+| 🧠 **Orchestrator**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓\*\*\*\* |  | ✓     |
+| ⚙️ **Planner**               |      | ✓\*  |      |      |         | ✓\*\*\*\* |  | ✓     |
+| ⚙️ **Builder**               | ✓    | ✓\*\* | ✓    | ✓    | ✓\*\*   | ✓\*\*\*\* |  | ✓     |
+| 🧠 **Buddy**                 | ✓    | ✓    | ✓    | ✓    | ✓\*\*   | ✓\*\*\*\* |  | ✓     |
+| ⚙️ **PlanReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓\*\*\*\* |  | ✓     |
+| ⚙️ **CodeReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓\*\*\*\* |  | ✓     |
 | ⚙️ **Committer**             | ✓    |      | ✓    | ✓    | ✓\*\*\* |      |     | ✓     |
 | ⚙️ **Explorer**              | ✓    | ✓†   | ✓    | ✓    |         |      |     | ✓     |
-| ⚙️ **Librarian**             |      |      |      |      |         |      | ✓   | ✓     |
-| 🧠 **DocumentationEngineer** | ✓    | ✓    | ✓    | ✓    |         | ✓    |     | ✓     |
-| 🧠 **Testing**               | ✓    | ✓    | ✓    | ✓    | ✓       | ✓    | ✓   | ✓     |
+| ⚙️ **Librarian**             |      | ✓‡   |      |      |         |      | ✓   | ✓     |
+| 🧠 **DocumentationEngineer** | ✓    | ✓    | ✓    | ✓    |         |      |     |       |
+| ⚙️ **Testing**               | ✓    |      | ✓    | ✓    | ✓\*\*\*\*\* |  |  |       |
 
 **Legend:**
 
 - `*` = PLAN.md only
-- `**` = Selective (git commands denied)
+- `**` = Selective (git commands denied; `PLAN.md` denied for the Builder)
 - `***` = Git commands only (status, add, commit)
+- `****` = Deny-by-default; only the mapped task targets below are allowed
+- `*****` = `ask` (user approval per command)
 - `†` = PROJECT_MAP.md only
+- `‡` = `docs/research/**` only
+
+### Task Target Mapping (deny-by-default)
+
+| Agent          | Allowed task targets |
+| -------------- | -------------------- |
+| Buddy          | Orchestrator, Explorer, Librarian |
+| Orchestrator   | Planner, Builder, Testing, PlanReviewer, CodeReviewer, Explorer, Librarian (never Committer) |
+| Planner        | Explorer, Librarian, PlanReviewer |
+| Builder        | Committer (during Orchestrator-authorized finalization only) |
+| PlanReviewer   | Explorer, Librarian |
+| CodeReviewer   | Explorer, Librarian |
+| Explorer / Librarian / Testing / Committer | — (leaves) |
+
+Built-in `build`, `plan`, `general`, and `explore` agents remain disabled so lifecycle work cannot bypass the Orchestrator. `subagent_depth` is `5`.
+
+## Lifecycle
+
+All lifecycle commands route through the **Orchestrator**:
+
+| Command | Effect |
+| ------- | ------ |
+| `/plan` | Foreground planning via Planner (user questions allowed); asks before replacing a nonempty `PLAN.md` |
+| `/continue_implementation` | Dispatches at most two dependency-ready, parallel-safe, path-disjoint Builders; batch barrier; sequential finalization (Testing → CodeReviewer ≤3 rounds → `[x]` → Committer). Replaces `/implement_next_task` |
+| `/review_plan` | PlanReviewer pass over `PLAN.md` including the dependency graph |
+| `/review_code` | CodeReviewer pass over one identifiable task/change scope — no vague general review |
+| `/research` | Orchestrator → Librarian directly; durable notes under `docs/research/` (max 4 distinct topics in parallel); no skill generation |
+| `/archive_plan` | Unchanged, Buddy-owned |
+
+**Rules and retry policy:**
+
+- **Cooperative parallelism:** max 2 Builders / 4 Librarians. Claims are prompt/session coordinated — **not atomic, not safe across independent OpenCode processes**, and documented as such.
+- **Batch barrier:** no Builder edits `PLAN.md`, invokes review, or commits while a batch is active; the Orchestrator never mutates the plan while a batch runs. A Builder that exhausts recovery aborts review/commit for the whole batch.
+- **Retries:** one same-session resume for any technical Task failure (timeout, API/tool error, step-limit/incomplete result, unavailable session); only a Builder gets one further fresh session that must continue the partial work. Review critique, test failure, user rejection, and invalid state are not technical failures.
+- **Preconditions:** missing/malformed/unapproved/completed/dependency-blocked plans stop deterministically without retry or child dispatch.
+- **Research location:** the Librarian may write only under `docs/research/` (`agent-harness/docs/research/` in synced projects); research verification remains issue #85.
+- **Sync:** authoritative changes in this repo are propagated to parent projects via `bin/harness-sync.sh`; restart OpenCode after config changes.
+
+### Validation
+
+- `bin/check-harness.sh` — dependency-free static checks (agent modes, task mappings, built-in disablement, depth, command routing, plan fields, Librarian confinement).
+- **Manual smoke checklist** (record pass/fail with brief evidence): Planner question flow; one and two Builder execution; overlap rejection; missing background support; same-session retry and Builder fresh continuation; failed-batch no-review/no-commit; validation/review correction; scoped sequential commits; up to four distinct Librarians; Buddy natural-language delegation.
 
 ## Setup
 
