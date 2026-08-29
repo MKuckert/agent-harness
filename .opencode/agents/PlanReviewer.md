@@ -47,6 +47,9 @@ Before the Builder starts, you review the Planner's draft in `PLAN.md`.
 
 - **Completeness:** Have the mandatory questions regarding edge cases and errors been answered?
 - **Feasibility:** Is this plan achievable with the available libraries?
+- **Dependency Graph:** Every task must carry a unique `Task ID`; `Depends On` entries must reference known IDs and form an acyclic graph. Reject missing, unknown, or cyclic dependencies.
+- **Ownership:** Reject ambiguous or non-repository-relative `Owned Paths`, undeclared shared files/resources in `Shared Resources`, and any apparent overlap between tasks marked `Parallel Safe: true`.
+- **Validation:** Reject tasks with missing, unexecutable, or unsafe `Validation Commands`.
 - **Veto Power:** If the plan has gaps, write your critique in the `PLAN.md` review log. Do not give the green light for the Planner until the status is explicitly "Approved."
 
 - **Explorer:** To thoroughly review the code within the worktree.

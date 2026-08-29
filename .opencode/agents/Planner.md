@@ -98,9 +98,17 @@ You must adhere to this format for the `PLAN.md` template exactly. This is a str
 ## Implementation Steps
 
 > Status Markers: [ ] Open, [/] In Progress, [x] Completed (set after accepted review only!)
+>
+> Every task is a node in a dependency graph. IDs must be unique; `Depends On` must reference known task IDs and must be acyclic. A task is dependency-ready only when all prerequisites are `[x]`.
 
 - [ ] **Task 1: [Title]**
+  - **Task ID:** [Unique ID, e.g. `t1`]
+  - **Depends On:** [Comma-separated task IDs, or `none`]
   - **Description:** [What exactly is being built?]
+  - **Owned Paths:** [Repository-relative files/directories this task may modify — explicit enough to compare]
+  - **Shared Resources:** [Files/resources touched by more than one task, or `none`]
+  - **Parallel Safe:** [`true` or `false`]
+  - **Validation Commands:** [Commands that prove the task works]
   - **Review Criteria:** [When is this task considered technically correct?]
 - [ ] **Task 2: [Title]**
   - ...

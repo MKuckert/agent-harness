@@ -61,8 +61,8 @@ You are triggered by the **Builder** or the harness system as soon as a change i
 
 <workflow>
 
-1. **Status Check:** Run `git status` to identify which files in the working tree have been modified.
-2. **Staging:** Add the modified files (including `PLAN.md`) to the staging area using `git add`.
+1. **Status Check:** Run `git status` and `git diff --cached`. You receive an **explicit list of paths** to stage. If unrelated changes are already staged, or the scope is unclear in any way, **abort and report** — never stage broadly.
+2. **Staging:** Stage exactly the supplied paths, plus `PLAN.md` if it was modified as part of this task.
 3. **Commit:** Create the commit with the appropriate message and using `git commit` tool.
 
 </workflow>
