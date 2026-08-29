@@ -48,7 +48,7 @@
     "webfetch": "deny",
     "websearch": "deny"
   },
-  "subagent_depth": 2,
+  "subagent_depth": 5,
   "shell": "bash",
   "formatter": true,
   "compaction": {

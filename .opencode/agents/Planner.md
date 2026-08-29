@@ -1,6 +1,7 @@
 ---
 description: "Strategic software architect creating a PLAN.md"
-mode: primary
+mode: subagent
+hidden: true
 model: github-copilot/gpt-5.6-sol
 reasoningEffort: high
 permission:
@@ -27,7 +28,11 @@ permission:
     tasks/*: allow
   bash: deny
   question: allow
-  task: allow
+  task:
+    "*": deny
+    "Explorer": allow
+    "Librarian": allow
+    "PlanReviewer": allow
   web_*: deny
   skill:
     "*": allow

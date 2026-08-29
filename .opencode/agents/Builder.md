@@ -1,11 +1,14 @@
 ---
 description: "Software developer implementing a PLAN.md"
-mode: primary
+mode: subagent
+hidden: true
 model: github-copilot/gpt-5.6-terra
 reasoningEffort: low
 permission:
   read: allow
-  edit: allow
+  edit:
+    "*": allow
+    "PLAN.md": deny
   grep: allow
   glob: allow
   list: allow
@@ -13,7 +16,9 @@ permission:
     "*": deny
     "nono why *": allow
   question: allow
-  task: allow
+  task:
+    "*": deny
+    "Committer": allow
   web_*: deny
   skill:
     "*": allow
