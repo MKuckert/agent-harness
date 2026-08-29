@@ -12,7 +12,7 @@
 | [⚙️ **Code Reviewer**](.opencode/agents/CodeReviewer.md)                   | Reviews exactly one task-scope for correctness, security, and plan compliance; sole authority to mark tasks `[x]` in `PLAN.md`.                            |
 | [⚙️ **Committer**](.opencode/agents/Committer.md)                          | Git sub-agent that stages only explicitly supplied paths plus `PLAN.md`; aborts on ambiguous scope; triggered only during Orchestrator-authorized finalization. |
 | [⚙️ **Explorer**](.opencode/agents/Explorer.md)                            | Read-only code analyst that maps the existing codebase, identifies entry points and dependencies, and reports precise findings.                            |
-| [⚙️ **Librarian**](.opencode/agents/Librarian.md)                          | Information specialist that fetches external documentation and writes durable research notes under `docs/research/` only.                                  |
+| [⚙️ **Librarian**](.opencode/agents/Librarian.md)                          | Information specialist that fetches external documentation and writes durable research artifacts under `research/results/` per the Research Artifact Contract.   |
 | [🧠 **Documentation Engineer**](.opencode/agents/DocumentationEngineer.md) | Specialized agent for writing, organizing, and maintaining technical documentation and guides.                                                              |
 | [⚙️ **Testing**](.opencode/agents/Testing.md)                              | Non-editing subagent that runs plan-approved validation commands for finished tasks; never modifies source, config, `PLAN.md`, or Git state.                 |
 
@@ -43,7 +43,7 @@
 - `****` = Deny-by-default; only the mapped task targets below are allowed
 - `*****` = `ask` (user approval per command)
 - `†` = PROJECT_MAP.md only
-- `‡` = `docs/research/**` only
+- `‡` = `research/results/**` only
 
 ### Task Target Mapping (deny-by-default)
 
@@ -69,7 +69,7 @@ All lifecycle commands route through the **Orchestrator**:
 | `/continue_implementation` | Dispatches at most two dependency-ready, parallel-safe, path-disjoint Builders; batch barrier; sequential finalization (Testing → CodeReviewer ≤3 rounds → `[x]` → Committer). Replaces `/implement_next_task` |
 | `/review_plan` | PlanReviewer pass over `PLAN.md` including the dependency graph |
 | `/review_code` | CodeReviewer pass over one identifiable task/change scope — no vague general review |
-| `/research` | Orchestrator → Librarian directly; durable notes under `docs/research/` (max 4 distinct topics in parallel); no skill generation |
+| `/research` | Orchestrator → Librarian directly; one durable artifact per run under `research/results/` per the Research Artifact Contract (max 4 distinct topics in parallel); no skill generation |
 | `/archive_plan` | Unchanged, Buddy-owned |
 
 **Rules and retry policy:**
@@ -78,7 +78,7 @@ All lifecycle commands route through the **Orchestrator**:
 - **Batch barrier:** no Builder edits `PLAN.md`, invokes review, or commits while a batch is active; the Orchestrator never mutates the plan while a batch runs. A Builder that exhausts recovery aborts review/commit for the whole batch.
 - **Retries:** one same-session resume for any technical Task failure (timeout, API/tool error, step-limit/incomplete result, unavailable session); only a Builder gets one further fresh session that must continue the partial work. Review critique, test failure, user rejection, and invalid state are not technical failures.
 - **Preconditions:** missing/malformed/unapproved/completed/dependency-blocked plans stop deterministically without retry or child dispatch.
-- **Research location:** the Librarian may write only under `docs/research/` (`agent-harness/docs/research/` in synced projects); research verification remains issue #85.
+- **Research artifacts:** the Librarian may write only under `research/results/` (workspace-relative), per the Research Artifact Contract ([docs/research-artifact-contract.md](docs/research-artifact-contract.md)); each consuming workspace provisions its own `research/results/` directory. Research verification remains issue #85.
 - **Sync:** authoritative changes in this repo are propagated to parent projects via `bin/harness-sync.sh`; restart OpenCode after config changes.
 
 ### Validation

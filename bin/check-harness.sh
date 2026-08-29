@@ -114,12 +114,12 @@ has "$A/Orchestrator.md" 'exactly once' "Orchestrator resumes a failed child ses
 # --- librarian write confinement ----------------------------------------------
 fm=$(frontmatter "$A/Librarian.md")
 if echo "$fm" | grep -q '"\*": deny' && \
-   echo "$fm" | grep -q 'docs/research/\*\*' ; then
-    pass "Librarian write scope confined to docs/research/**"
+   echo "$fm" | grep -q 'research/results/\*\*' ; then
+    pass "Librarian write scope confined to research/results/**"
 else
-    failmsg "Librarian edit permissions must be deny-by-default with only docs/research/** allowed"
+    failmsg "Librarian edit permissions must be deny-by-default with only research/results/** allowed"
 fi
-[ -d docs/research ] && pass "docs/research/ directory exists in the harness" || failmsg "docs/research/ directory missing"
+[ -f research/results/.gitkeep ] && pass "research/results/ destination provisioned in the harness" || failmsg "research/results/ destination missing"
 
 echo
 if [ $fail -eq 0 ]; then
