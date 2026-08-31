@@ -1,7 +1,8 @@
 ---
 description: "Provides read access to the local code"
 mode: subagent
-model: github-copilot/gpt-5.6-luna
+model: github-copilot/claude-sonnet-5
+reasoningEffort: low
 permission:
   read: allow
   edit:

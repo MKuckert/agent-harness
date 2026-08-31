@@ -1,7 +1,7 @@
 ---
 description: "Strategic software architect creating a PLAN.md"
 mode: primary
-model: github-copilot/gpt-5.6-sol
+model: github-copilot/claude-opus-5
 reasoningEffort: high
 permission:
   read:

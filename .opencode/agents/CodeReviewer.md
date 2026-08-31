@@ -1,8 +1,8 @@
 ---
 description: "Reviews the work of Builder"
 mode: subagent
-model: github-copilot/claude-opus-4.6
-reasoningEffort: low
+model: github-copilot/claude-opus-5
+reasoningEffort: high
 permission:
   read: allow
   edit:

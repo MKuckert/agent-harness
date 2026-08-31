@@ -1,7 +1,8 @@
 ---
 description: "Retrieves required information from external resources"
 mode: subagent
-model: github-copilot/gpt-5.6-luna
+model: github-copilot/claude-sonnet-5
+reasoningEffort: low
 permission:
   read: deny
   edit: deny

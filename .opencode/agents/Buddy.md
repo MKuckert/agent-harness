@@ -1,8 +1,8 @@
 ---
 description: "Use this agent as your technical assistant for talking about coding, debugging and development tasks."
 mode: primary
-model: github-copilot/gpt-5.6-sol
-reasoningEffort: low
+model: github-copilot/claude-sonnet-5
+reasoningEffort: medium
 permission:
   read: allow
   edit: allow
