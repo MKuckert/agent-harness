@@ -16,8 +16,8 @@
 | [🧠 **Documentation Engineer**](.opencode/agents/DocumentationEngineer.md) | Specialized agent for writing, organizing, and maintaining technical documentation and guides.                                                              |
 | [⚙️ **Testing**](.opencode/agents/Testing.md)                              | Non-editing subagent that runs plan-approved validation commands for finished tasks; never modifies source, config, `PLAN.md`, or Git state.                 |
 
-- 🧠: Primary agent — can spawn sub-agents
-- ⚙️: Sub-agent
+- 🧠: Selectable primary-capable agent; Orchestrator uses `mode: all` so it is also Task-delegable
+- ⚙️: Subagent-only
 
 ### Tool Permissions by Agent
 
@@ -31,7 +31,7 @@
 | ⚙️ **CodeReviewer**          | ✓    | ✓\*  | ✓    | ✓    |         | ✓\*\*\*\* |  | ✓     |
 | ⚙️ **Committer**             | ✓    |      | ✓    | ✓    | ✓\*\*\* |      |     | ✓     |
 | ⚙️ **Explorer**              | ✓    | ✓†   | ✓    | ✓    |         |      |     | ✓     |
-| ⚙️ **Librarian**             |      | ✓‡   |      |      |         |      | ✓   | ✓     |
+| ⚙️ **Librarian**             |      | ✓‡   | ✓    | ✓‡   |         |      | ✓   | ✓     |
 | 🧠 **DocumentationEngineer** | ✓    | ✓    | ✓    | ✓    |         |      |     |       |
 | ⚙️ **Testing**               | ✓    |      | ✓    | ✓    | ✓\*\*\*\*\* |  |  |       |
 

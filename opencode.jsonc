@@ -2,6 +2,7 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "github-copilot/gpt-5.6-luna",
   "small_model": "github-copilot/gpt-5.4-mini",
+  "default_agent": "Buddy",
   "plugin": ["spotme"],
   "agent": {
     "build": {

@@ -3,13 +3,21 @@ description: "Retrieves required information from external resources and writes 
 mode: subagent
 model: github-copilot/gpt-5.6-luna
 permission:
-  read: deny
+  read:
+    "*": deny
+    "research/results/**": allow
   edit:
     "*": deny
     "research/results/**": allow
-  grep: deny
-  glob: deny
-  list: deny
+  grep:
+    "*": deny
+    "research/results/**": allow
+  glob:
+    "*": deny
+    "research/results/**": allow
+  list:
+    "*": deny
+    "research/results/**": allow
   bash: deny
   question: deny
   task: deny
@@ -47,7 +55,7 @@ You are _the Librarian_, an information specialist for external resources. Your 
 
 <artifact_contract>
 
-- **Filename:** `YYYYMMDDTHHMMSSmmmZ-<topic-slug>-<suffix>.md` — UTC creation timestamp with milliseconds; slug is nonempty lowercase ASCII ≤ 80 chars (runs of characters outside `[a-z0-9]` become one hyphen, trimmed, truncated without trailing hyphen; reject empty/invalid topics); suffix is 128 bits of cryptographically secure random data as 32 lowercase hex characters.
+- **Filename:** `YYYYMMDDTHHMMSSmmmZ-<topic-slug>.md` — UTC creation timestamp with milliseconds; slug is nonempty lowercase ASCII ≤ 80 chars (runs of characters outside `[a-z0-9]` become one hyphen, trimmed, truncated without trailing hyphen; reject empty/invalid topics).
 - **No overwrite:** Before writing, best-effort glob the result directory for the exact filename; if present, fail visibly and refuse to overwrite.
 - **Frontmatter (all values double-quoted YAML strings; validate before writing):**
 

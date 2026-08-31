@@ -19,7 +19,7 @@ has() { # $1=file $2=needle $3=description
 }
 
 # --- agent modes -------------------------------------------------------------
-has "$A/Orchestrator.md" 'mode: primary'   "Orchestrator is a primary (selectable/delegable) agent"
+has "$A/Orchestrator.md" 'mode: all'       "Orchestrator is selectable and Task-delegable"
 if grep -q 'hidden: true' "$A/Orchestrator.md"; then failmsg "Orchestrator must not be hidden"; else pass "Orchestrator must not be hidden"; fi
 for a in Planner Builder Testing; do
     if grep -q 'mode: subagent' "$A/$a.md" && grep -q 'hidden: true' "$A/$a.md"; then
@@ -33,6 +33,7 @@ if grep -q 'hidden: true' "$A/Buddy.md" || ! grep -q 'mode: primary' "$A/Buddy.m
 else
     pass "Buddy remains a visible primary agent (default)"
 fi
+has opencode.jsonc '"default_agent": "Buddy"' "Buddy is the configured default agent"
 
 # --- delegation graph (deny-by-default task targets) --------------------------
 check_targets() { # $1=agent $2=allowed (space sep) $3=forbidden (space sep)
@@ -113,11 +114,21 @@ has "$A/Orchestrator.md" 'exactly once' "Orchestrator resumes a failed child ses
 
 # --- librarian write confinement ----------------------------------------------
 fm=$(frontmatter "$A/Librarian.md")
+if echo "$fm" | grep -q '^  grep: allow$'; then
+    pass "Librarian can search research artifacts"
+else
+    failmsg "Librarian grep permission must be allowed"
+fi
 if echo "$fm" | grep -q '"\*": deny' && \
    echo "$fm" | grep -q 'research/results/\*\*' ; then
     pass "Librarian write scope confined to research/results/**"
 else
     failmsg "Librarian edit permissions must be deny-by-default with only research/results/** allowed"
+fi
+if echo "$fm" | grep -A2 '^  glob:' | grep -q 'research/results/\*\*.*allow'; then
+    pass "Librarian can inspect research/results/** for collisions"
+else
+    failmsg "Librarian glob permissions must allow research/results/** only"
 fi
 [ -f research/results/.gitkeep ] && pass "research/results/ destination provisioned in the harness" || failmsg "research/results/ destination missing"
 

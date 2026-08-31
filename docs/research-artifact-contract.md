@@ -17,14 +17,13 @@ Artifacts are version-controlled when their workspace owner stages them, but Lib
 Use one filesystem-safe filename for each run:
 
 ```text
-YYYYMMDDTHHMMSSmmmZ-<topic-slug>-<suffix>.md
+YYYYMMDDTHHMMSSmmmZ-<topic-slug>.md
 ```
 
 - `YYYYMMDDTHHMMSSmmmZ` is the UTC creation time, including milliseconds.
 - `<topic-slug>` is a nonempty, lowercase ASCII slug no longer than 80 characters. Normalize the topic by replacing each run of characters outside `[a-z0-9]` with one hyphen, trimming leading and trailing hyphens, and truncating without leaving a trailing hyphen. Do not transliterate Unicode text. Reject an empty slug, a slug containing `/`, `\\`, or `..`, or a topic that cannot produce a valid slug.
-- `<suffix>` is at least 128 bits of cryptographically secure random data encoded as lowercase hexadecimal (32 characters).
 
-Before writing, perform a best-effort result-directory glob for the exact filename. If it is returned, fail visibly and refuse to overwrite it. A timestamp and high-entropy suffix make accidental collisions impractical, but `glob` followed by `write` is not atomic. Truly concurrent adversarial collisions cannot be eliminated without an atomic-create tool and are outside this prompt-only design.
+Before writing, perform a best-effort result-directory glob for the exact filename. If it is returned, fail visibly and refuse to overwrite it. The timestamp includes milliseconds, but `glob` followed by `write` is not atomic. Truly concurrent collisions cannot be eliminated without an atomic-create tool and are outside this prompt-only design.
 
 ## Required Frontmatter
 
