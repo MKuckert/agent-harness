@@ -1,7 +1,6 @@
 ---
 description: "Software developer implementing a PLAN.md"
 mode: subagent
-hidden: true
 model: github-copilot/gpt-5.6-terra
 reasoningEffort: low
 permission:

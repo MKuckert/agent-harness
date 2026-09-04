@@ -1,7 +1,6 @@
 ---
 description: "Runs plan-approved validation commands for finished implementation tasks"
 mode: subagent
-hidden: true
 model: github-copilot/gpt-5.6-sol
 permission:
   read: allow
