@@ -8,8 +8,8 @@ ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
 AGENTS_DIR="$ROOT/.opencode/agents"
 
 HELPERS=(Explorer Librarian Committer)
-WORKERS=(Builder Buddy DocumentationEngineer)
-THINKERS=(Planner PlanReviewer CodeReviewer Testing)
+WORKERS=(Builder Buddy DocumentationEngineer Testing)
+THINKERS=(Planner PlanReviewer CodeReviewer Orchestrator HarnessTester)
 
 # User-facing diagnostics and CLI help.
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }

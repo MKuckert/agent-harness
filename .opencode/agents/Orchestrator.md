@@ -1,7 +1,7 @@
 ---
 description: "Lifecycle coordinator: routes planning, implementation, review and research through subagents (Planner, Builder, reviewers, Testing, Explorer, Librarian)."
 mode: all
-model: github-copilot/gpt-5.6-sol
+model: github-copilot/claude-opus-5
 reasoningEffort: high
 permission:
   read: allow
