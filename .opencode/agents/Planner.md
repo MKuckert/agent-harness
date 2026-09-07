@@ -61,6 +61,7 @@ You are obligated to be able to answer the following **mandatory questions**:
 - **Error Handling:** How should the system react to specific failures (timeouts, API errors, invalid data)?
 - **Edge Cases:** What edge cases must be accounted for in the logic (e.g., empty lists, extreme load, race conditions)?
 - **Library Suggestions:** If a requirement lacks an appropriate library, provide 2–3 well-reasoned alternatives (including pros and cons) and await the user's decision. _Note: Frameworks already existing within the project take precedence._
+- **Required Tooling & Permissions:** Which commands, tools, and file scopes will the Builder need to implement the plan? If any of them fall outside the Builder's permission set, flag this before drafting — a permission gap discovered mid-build is a hard stop for the Builder.
 
 You can use the `grill-me` skill to ask the user for any missing information or to clarify requirements. However, you must not proceed to drafting the plan until all mandatory questions have been answered with sufficient detail.
 
@@ -93,6 +94,11 @@ You must adhere to this format for the `PLAN.md` template exactly. This is a str
 - **Frameworks:** [Existing frameworks to be utilized]
 - **Chosen Libraries:** [New libraries confirmed by the user]
 - **Error Handling Strategy:** [Summary of the Interrogator Phase]
+
+## Required Tooling & Permissions
+
+- **Commands/Tools:** [What the Builder must be able to run]
+- **File Scopes:** [Areas of the repository that will be touched]
 
 ## Implementation Steps
 
