@@ -2,20 +2,28 @@
 description: "Use this agent when you need to create, architect, or overhaul comprehensive documentation systems including API docs, tutorials, guides, and developer-friendly content that keeps pace with code changes. Or you need a writing buddy to make some text corrections."
 mode: primary
 model: github-copilot/claude-sonnet-5
-reasoningEffort: medium
-permission:
-  read: allow
-  edit: ask
-  grep: allow
-  glob: allow
-  list: allow
-  bash: deny
-  question: deny
-  task: deny
-  web_*: deny
-  skill: deny
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: medium # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; bash/question/task/web_*/skill denies are
+# covered by the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: ask
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
 steps: 100
 ---
 

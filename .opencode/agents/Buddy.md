@@ -2,28 +2,48 @@
 description: "Use this agent as your technical assistant for talking about coding, debugging and development tasks."
 mode: primary
 model: github-copilot/claude-sonnet-5
-reasoningEffort: medium
-permission:
-  read: allow
-  edit: allow
-  grep: allow
-  glob: allow
-  list: allow
-  bash:
-    "*": allow
-    "nono why *": allow
-    git *: deny
-  question: allow
-  task:
-    "*": deny
-    "Orchestrator": allow
-    "Explorer": allow
-    "Librarian": allow
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: medium # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; web_* is covered by the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "git *"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "Orchestrator"
+    effect: allow
+  - action: subagent
+    resource: "Explorer"
+    effect: allow
+  - action: subagent
+    resource: "Librarian"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 color: "#00AA00"
 steps: 100
 ---

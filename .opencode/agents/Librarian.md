@@ -2,31 +2,37 @@
 description: "Retrieves required information from external resources and writes durable research notes"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: low
-permission:
-  read:
-    "*": deny
-    "research/results/**": allow
-  edit:
-    "*": deny
-    "research/results/**": allow
-  grep:
-    "*": deny
-    "research/results/**": allow
-  glob:
-    "*": deny
-    "research/results/**": allow
-  list:
-    "*": deny
-    "research/results/**": allow
-  bash: deny
-  question: deny
-  task: deny
-  web_*: allow
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: low # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; bash/question/task denies are covered by
+# the leading deny. web_*: allow maps to explicit webfetch/websearch.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "research/results/**"
+    effect: allow
+  - action: edit
+    resource: "research/results/**"
+    effect: allow
+  - action: grep
+    resource: "research/results/**"
+    effect: allow
+  - action: glob
+    resource: "research/results/**"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 steps: 200
 ---
 

@@ -2,24 +2,31 @@
 description: "Provides read access to the local code"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: low
-permission:
-  read: allow
-  edit:
-    "*": deny
-    "PROJECT_MAP.md": allow
-  grep: allow
-  glob: allow
-  list: allow
-  bash: deny
-  question: deny
-  task: deny
-  web_*: deny
-  skill:
-    "*": deny
-    create-projectmap: allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: low # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; bash/question/task/web_* denies are covered
+# by the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "PROJECT_MAP.md"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: skill
+    resource: "create-projectmap"
+    effect: allow
 steps: 200
 ---
 

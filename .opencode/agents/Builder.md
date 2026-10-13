@@ -2,28 +2,47 @@
 description: "Software developer implementing a PLAN.md"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: medium
-permission:
-  read: allow
-  edit:
-    "*": allow
-    "PLAN.md": deny
-  grep: allow
-  glob: allow
-  list: allow
-  bash:
-    "*": deny
-    "nono why *": allow
-  question: allow
-  task:
-    "*": deny
-    "Committer": allow
-    "Explorer": allow
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: deny
+reasoningEffort: medium # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; web_* is covered by the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "PLAN.md"
+    effect: deny
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "nono why *"
+    effect: allow
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "Committer"
+    effect: allow
+  # Pre-existing harness drift (see check-harness.sh baseline): Explorer is
+  # allowed here although the delegation contract expects Committer only.
+  - action: subagent
+    resource: "Explorer"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 color: "#00AA00"
 steps: 100
 ---

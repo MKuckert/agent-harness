@@ -1,24 +1,31 @@
 {
+  // OpenCode V2 native config (migrated from V1, see issue #113).
   "$schema": "https://opencode.ai/config.json",
   "model": "github-copilot/gpt-5.6-luna",
-  "small_model": "github-copilot/gpt-5.4-mini",
+  // V1 "small_model" is the built-in title agent's model; agents.title.model below
+  // already pins it, so the legacy field is dropped.
   "default_agent": "Buddy",
-  "plugin": ["spotme"],
-  "agent": {
+
+  // V1 plugin "spotme" removed: it is a V1-API plugin (gym mode for OpenCode+Pi)
+  // that does not run in V2 and is not portable from this migration.
+  // TODO(#113): re-evaluate spotme for a V2 port or replacement.
+
+  // V1 "agent" map -> "agents"; disable -> disabled
+  "agents": {
     "build": {
-      "disable": true,
+      "disabled": true,
       "mode": "primary",
     },
     "plan": {
-      "disable": true,
+      "disabled": true,
       "mode": "primary",
     },
     "general": {
-      "disable": true,
+      "disabled": true,
       "mode": "subagent",
     },
     "explore": {
-      "disable": true,
+      "disabled": true,
       "mode": "subagent",
     },
 
@@ -38,32 +45,43 @@
       "model": "github-copilot/gpt-5.4-mini",
     },
   },
+
+  // V1 flat "mcp" map -> grouped "mcp.servers"; enabled: true is the default.
+  // V1 experimental.mcp_timeout (600000) -> default mcp.timeout.catalog/execution.
   "mcp": {
-    "web": {
-      "type": "remote",
-      "enabled": true,
-      "url": "http://localhost:12002/mcp",
+    "timeout": {
+      "catalog": 600000,
+      "execution": 600000,
+    },
+    "servers": {
+      "web": {
+        "type": "remote",
+        "url": "http://localhost:12002/mcp",
+      },
     },
   },
-  "permission": {
-    "webfetch": "deny",
-    "websearch": "deny"
+
+  // V1 "permission" map -> ordered "permissions" ruleset (last match wins).
+  // V2's base policy is allow-all, so only the restrictions are listed here.
+  "permissions": [
+    { "action": "webfetch", "resource": "*", "effect": "deny" },
+    { "action": "websearch", "resource": "*", "effect": "deny" },
+  ],
+
+  // V1 top-level subagent_depth -> experimental.subagent_depth
+  "experimental": {
+    "subagent_depth": 5,
+    // Removed V1-only experimental fields (no V2 equivalent):
+    //   quotaToast, batch_tool (explicitly unsupported in V2),
+    //   disable_paste_summary (V2 CLI: prompt.paste "full" in cli.json)
   },
-  "subagent_depth": 5,
+
   "shell": "bash",
   "formatter": true,
+  // V1 compaction.prune has no V2 equivalent (token-budget based retention); dropped.
   "compaction": {
     "auto": true,
-    "prune": true,
   },
-  // Disables the snapshot feature to roll back agent changes as I'm not using it anyway
-  "snapshot": false,
-  "experimental": {
-    "quotaToast": {
-      "enableToast": false,
-    },
-    "batch_tool": true,
-    "disable_paste_summary": true,
-    "mcp_timeout": 600000,
-  },
+  // V1 "snapshot" -> "snapshots"; disables the snapshot feature to roll back agent changes
+  "snapshots": false,
 }

@@ -2,29 +2,49 @@
 description: "Commits changes to git"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: low
-permission:
-  read: allow
-  edit: deny
-  grep: allow
-  glob: allow
-  list: allow
-  bash:
-    "*": deny
-    "nono why *": allow
-    "git status *": allow
-    "git add *": allow
-    "git rm *": allow
-    "git commit *": allow
-    "git diff *": allow
-    "git log *": allow
-  question: deny
-  task: deny
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: low # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; edit/question/task/web_* denies are covered
+# by the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "nono why *"
+    effect: allow
+  - action: shell
+    resource: "git status *"
+    effect: allow
+  - action: shell
+    resource: "git add *"
+    effect: allow
+  - action: shell
+    resource: "git rm *"
+    effect: allow
+  - action: shell
+    resource: "git commit *"
+    effect: allow
+  - action: shell
+    resource: "git diff *"
+    effect: allow
+  - action: shell
+    resource: "git log *"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 steps: 100
 ---
 

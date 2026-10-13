@@ -2,32 +2,58 @@
 description: "Lifecycle coordinator: routes planning, implementation, review and research through subagents (Planner, Builder, reviewers, Testing, Explorer, Librarian)."
 mode: all
 model: github-copilot/claude-opus-5
-reasoningEffort: high
-permission:
-  read: allow
-  edit:
-    "*": deny
-    PLAN.md: allow
-    tasks/*: allow
-  grep: allow
-  glob: allow
-  list: allow
-  bash: deny
-  question: allow
-  task:
-    "*": deny
-    "Planner": allow
-    "Builder": allow
-    "Testing": allow
-    "PlanReviewer": allow
-    "CodeReviewer": allow
-    "Explorer": allow
-    "Librarian": allow
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: high # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; bash/web_* denies are covered by the
+# leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "PLAN.md"
+    effect: allow
+  - action: edit
+    resource: "tasks/*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "Planner"
+    effect: allow
+  - action: subagent
+    resource: "Builder"
+    effect: allow
+  - action: subagent
+    resource: "Testing"
+    effect: allow
+  - action: subagent
+    resource: "PlanReviewer"
+    effect: allow
+  - action: subagent
+    resource: "CodeReviewer"
+    effect: allow
+  - action: subagent
+    resource: "Explorer"
+    effect: allow
+  - action: subagent
+    resource: "Librarian"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 color: "#AA00AA"
 steps: 500
 ---

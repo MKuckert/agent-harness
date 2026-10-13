@@ -2,41 +2,58 @@
 description: "Strategic software architect creating a PLAN.md"
 mode: subagent
 model: github-copilot/claude-opus-5
-reasoningEffort: high
-permission:
-  read:
-    "*": deny
-    TODO.md: allow
-    PLAN.md: allow
-    tasks/*: allow
-  edit:
-    "*": deny
-    TODO.md: allow
-    PLAN.md: allow
-    tasks/*: allow
-  grep: deny
-  glob:
-    "*": deny
-    TODO.md: allow
-    PLAN.md: allow
-    tasks/*: allow
-  list:
-    "*": deny
-    TODO.md: allow
-    PLAN.md: allow
-    tasks/*: allow
-  bash: deny
-  question: allow
-  task:
-    "*": deny
-    "Explorer": allow
-    "Librarian": allow
-    "PlanReviewer": allow
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: high # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; grep/bash/web_* denies are covered by the
+# leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "TODO.md"
+    effect: allow
+  - action: read
+    resource: "PLAN.md"
+    effect: allow
+  - action: read
+    resource: "tasks/*"
+    effect: allow
+  - action: edit
+    resource: "TODO.md"
+    effect: allow
+  - action: edit
+    resource: "PLAN.md"
+    effect: allow
+  - action: edit
+    resource: "tasks/*"
+    effect: allow
+  - action: glob
+    resource: "TODO.md"
+    effect: allow
+  - action: glob
+    resource: "PLAN.md"
+    effect: allow
+  - action: glob
+    resource: "tasks/*"
+    effect: allow
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "Explorer"
+    effect: allow
+  - action: subagent
+    resource: "Librarian"
+    effect: allow
+  - action: subagent
+    resource: "PlanReviewer"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 color: "#DD0000"
 ---
 

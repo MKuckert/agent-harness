@@ -2,27 +2,40 @@
 description: "Reviews the work of Planner"
 mode: subagent
 model: github-copilot/claude-opus-5
-reasoningEffort: high
-permission:
-  read: allow
-  edit:
-    "*": deny
-    PLAN.md: allow
-    tasks/*: allow
-  grep: allow
-  glob: allow
-  list: allow
-  bash: deny
-  question: deny
-  task:
-    "*": deny
-    "Explorer": allow
-    "Librarian": allow
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: high # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; bash/question/web_* denies are covered by
+# the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "PLAN.md"
+    effect: allow
+  - action: edit
+    resource: "tasks/*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "Explorer"
+    effect: allow
+  - action: subagent
+    resource: "Librarian"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 steps: 500
 ---
 

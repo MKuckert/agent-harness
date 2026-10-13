@@ -2,22 +2,28 @@
 description: "Runs plan-approved validation commands for finished implementation tasks"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: medium
-permission:
-  read: allow
-  edit: deny
-  grep: allow
-  glob: allow
-  list: allow
-  bash:
-    "*": ask
-  question: deny
-  task: deny
-  web_*: deny
-  skill:
-    "*": deny
-  todowrite: deny
-  doom_loop: allow
+reasoningEffort: medium # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+# V2 native permissions ruleset (ordered, last match wins). The leading
+# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
+# allow-all, so every grant must be explicit. Dropped V1-only actions:
+# list, todowrite, doom_loop; edit/question/task/web_*/skill denies are
+# covered by the leading deny.
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: ask
 color: "#DD8800"
 steps: 100
 ---
