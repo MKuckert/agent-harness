@@ -33,8 +33,8 @@ perm() { # $1=file $2=action $3=resource $4=effect
         END {exit found?0:1}'
 }
 
-# is_leaf <file>: no explicit subagent allow rule (the leading "*" deny
-# covers subagent, so absence of an allow means the agent cannot delegate).
+# is_leaf <file>: no explicit subagent allow rule (leaves carry an explicit
+# "subagent *" deny, so absence of an allow means the agent cannot delegate).
 is_leaf() { # $1=file
     frontmatter "$1" | awk '
         /action:/ && $NF=="subagent" {in_sub=1; next}
@@ -59,10 +59,10 @@ else
 fi
 has opencode.jsonc '"default_agent": "Buddy"' "Buddy is the configured default agent"
 
-# --- delegation graph (deny-by-default subagent targets) ----------------------
+# --- delegation graph (explicit subagent deny + expected edges) --------------
 check_targets() { # $1=agent $2=allowed (space sep) $3=forbidden (space sep)
     local f="$A/$1.md" ok=0
-    perm "$f" "*" "*" deny || { failmsg "$1 permissions must be deny-by-default"; ok=1; }
+    perm "$f" subagent "*" deny || { failmsg "$1 must explicitly deny unknown subagent targets"; ok=1; }
     for t in $2; do
         perm "$f" subagent "$t" allow || { failmsg "$1 must allow subagent target $t"; ok=1; }
     done
@@ -71,7 +71,7 @@ check_targets() { # $1=agent $2=allowed (space sep) $3=forbidden (space sep)
             failmsg "$1 must NOT allow subagent target $t"; ok=1
         fi
     done
-    [ $ok -eq 0 ] && pass "$1 subagent target mapping (deny-by-default, expected edges only)"
+    [ $ok -eq 0 ] && pass "$1 subagent target mapping (explicit deny, expected edges only)"
 }
 check_targets Buddy        "Orchestrator Explorer Librarian" "Planner Builder Testing PlanReviewer CodeReviewer Committer"
 check_targets Orchestrator "Planner Builder Testing PlanReviewer CodeReviewer Explorer Librarian" "Committer Buddy"
@@ -133,7 +133,8 @@ has "$A/Orchestrator.md" 'exactly once' "Orchestrator resumes a failed child ses
 # --- librarian write confinement ----------------------------------------------
 perm "$A/Librarian.md" grep "research/results/**" allow && \
     pass "Librarian can search research artifacts" || failmsg "Librarian grep permission must allow research/results/**"
-if perm "$A/Librarian.md" "*" "*" deny && \
+if perm "$A/Librarian.md" read "*" deny && \
+   perm "$A/Librarian.md" edit "*" deny && \
    perm "$A/Librarian.md" edit "research/results/**" allow; then
     # the single edit allow must be research/results/** (no other edit grants)
     n=$(frontmatter "$A/Librarian.md" | awk '
@@ -146,7 +147,7 @@ if perm "$A/Librarian.md" "*" "*" deny && \
         failmsg "Librarian edit permissions must allow research/results/** only (found $n edit allows)"
     fi
 else
-    failmsg "Librarian permissions must be deny-by-default with only research/results/** editable"
+    failmsg "Librarian must deny read/edit by default with only research/results/** allowed"
 fi
 perm "$A/Librarian.md" glob "research/results/**" allow && \
     pass "Librarian can inspect research/results/** for collisions" || failmsg "Librarian glob permissions must allow research/results/**"

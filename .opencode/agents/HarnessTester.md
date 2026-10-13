@@ -4,8 +4,9 @@ mode: primary
 disabled: true
 model: github-copilot/claude-opus-5
 reasoningEffort: high # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
-# V1 permission "*": allow is explicit here for parity (V2's base policy
-# is already allow-all).
+# V2 native permissions ruleset. The V1 frontmatter was a blanket
+# "*": allow, preserved verbatim: everything is allowed (V2's base policy is
+# allow-all anyway).
 permissions:
   - action: "*"
     resource: "*"

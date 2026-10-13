@@ -3,18 +3,20 @@ description: "Lifecycle coordinator: routes planning, implementation, review and
 mode: all
 model: github-copilot/claude-opus-5
 reasoningEffort: high # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
-# V2 native permissions ruleset (ordered, last match wins). The leading
-# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
-# allow-all, so every grant must be explicit. Dropped V1-only actions:
-# list, todowrite, doom_loop; bash/web_* denies are covered by the
-# leading deny.
+# V2 native permissions ruleset (ordered, last match wins). This is a 1:1
+# conversion of the V1 frontmatter map: V2's base policy reproduces V1's
+# defaults (allow-all, external_directory ask, .env read ask) and the project
+# config keeps the V1 restrictions (webfetch/websearch deny, /tmp allow), so no
+# blanket leading rule is needed. Dropped V1-only actions (no V2 equivalent):
+# list, todowrite, doom_loop. "web_*" targets the MCP tools of the local `web`
+# server (same action pattern as V1).
 permissions:
-  - action: "*"
-    resource: "*"
-    effect: deny
   - action: read
     resource: "*"
     effect: allow
+  - action: edit
+    resource: "*"
+    effect: deny
   - action: edit
     resource: "PLAN.md"
     effect: allow
@@ -27,9 +29,15 @@ permissions:
   - action: glob
     resource: "*"
     effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
   - action: question
     resource: "*"
     effect: allow
+  - action: subagent
+    resource: "*"
+    effect: deny
   - action: subagent
     resource: "Planner"
     effect: allow
@@ -51,6 +59,9 @@ permissions:
   - action: subagent
     resource: "Librarian"
     effect: allow
+  - action: web_*
+    resource: "*"
+    effect: deny
   - action: skill
     resource: "*"
     effect: allow

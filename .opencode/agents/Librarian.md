@@ -3,31 +3,50 @@ description: "Retrieves required information from external resources and writes 
 mode: subagent
 model: github-copilot/claude-sonnet-5
 reasoningEffort: low # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
-# V2 native permissions ruleset (ordered, last match wins). The leading
-# "*" deny preserves the V1 deny-by-default intent: V2's base policy is
-# allow-all, so every grant must be explicit. Dropped V1-only actions:
-# list, todowrite, doom_loop; bash/question/task denies are covered by
-# the leading deny. web_*: allow maps to explicit webfetch/websearch.
+# V2 native permissions ruleset (ordered, last match wins). This is a 1:1
+# conversion of the V1 frontmatter map: V2's base policy reproduces V1's
+# defaults (allow-all, external_directory ask, .env read ask) and the project
+# config keeps the V1 restrictions (webfetch/websearch deny, /tmp allow), so no
+# blanket leading rule is needed. Dropped V1-only actions (no V2 equivalent):
+# list, todowrite, doom_loop. "web_*" targets the MCP tools of the local `web`
+# server (same action pattern as V1).
 permissions:
-  - action: "*"
+  - action: read
     resource: "*"
     effect: deny
   - action: read
     resource: "research/results/**"
     effect: allow
   - action: edit
+    resource: "*"
+    effect: deny
+  - action: edit
     resource: "research/results/**"
     effect: allow
+  - action: grep
+    resource: "*"
+    effect: deny
   - action: grep
     resource: "research/results/**"
     effect: allow
   - action: glob
+    resource: "*"
+    effect: deny
+  - action: glob
     resource: "research/results/**"
     effect: allow
-  - action: webfetch
+  - action: shell
     resource: "*"
-    effect: allow
-  - action: websearch
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  # V1 "web_*: allow" — MCP tools of the web server; built-in
+  # webfetch/websearch remain denied by the project config.
+  - action: web_*
     resource: "*"
     effect: allow
   - action: skill
