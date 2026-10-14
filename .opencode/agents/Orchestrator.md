@@ -2,7 +2,9 @@
 description: "Lifecycle coordinator: routes planning, implementation, review and research through subagents (Planner, Builder, reviewers, Testing, Explorer, Librarian)."
 mode: all
 model: github-copilot/claude-opus-5
-reasoningEffort: high # TODO(#113): verify against V2 model variants; harness-models.sh depends on this key
+request:
+  body:
+    reasoningEffort: high # model-level option via native request.body (a top-level key triggers V2's legacy V1 decode, which drops permissions)
 # V2 native permissions ruleset (ordered, last match wins). This is a 1:1
 # conversion of the V1 frontmatter map: V2's base policy reproduces V1's
 # defaults (allow-all, external_directory ask, .env read ask) and the project

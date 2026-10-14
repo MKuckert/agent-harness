@@ -124,7 +124,7 @@ validate_frontmatter() {
     fi
     if [[ $line == '---' ]]; then closed=true; break; fi
     [[ $line =~ ^model: ]] && ((++model_count))
-    [[ $line =~ ^reasoningEffort: ]] && ((++reasoning_count))
+    [[ $line =~ ^[[:space:]]+reasoningEffort: ]] && ((++reasoning_count))
     [[ $line =~ ^effort: ]] && ((++effort_count))
   done < "$file"
   [[ $line_number -gt 0 ]] || die "empty agent file: $file"
@@ -144,10 +144,10 @@ transform() {
   local target=$1 role=$2
   if [[ -n ${efforts[$role]} ]]; then
     MODEL=${models[$role]} EFFORT=${efforts[$role]} yq --front-matter=process -i \
-      'del(.effort) | .model = strenv(MODEL) | .reasoningEffort = strenv(EFFORT)' "$target"
+      'del(.effort) | .model = strenv(MODEL) | .request.body.reasoningEffort = strenv(EFFORT)' "$target"
   else
     MODEL=${models[$role]} yq --front-matter=process -i \
-      'del(.effort) | del(.reasoningEffort) | .model = strenv(MODEL)' "$target"
+      'del(.effort) | del(.request.body.reasoningEffort) | .model = strenv(MODEL)' "$target"
   fi
 }
 
