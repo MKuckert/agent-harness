@@ -2,24 +2,50 @@
 description: "Provides read access to the local code"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: low
-permission:
-  read: allow
-  edit:
-    "*": deny
-    "PROJECT_MAP.md": allow
-  grep: allow
-  glob: allow
-  list: allow
-  bash: deny
-  question: deny
-  task: deny
-  web_*: deny
-  skill:
-    "*": deny
-    create-projectmap: allow
-  todowrite: deny
-  doom_loop: allow
+request:
+  body:
+    reasoningEffort: low # model-level option via native request.body (a top-level key triggers V2's legacy V1 decode, which drops permissions)
+# V2 native permissions ruleset (ordered, last match wins). This is a 1:1
+# conversion of the V1 frontmatter map: V2's base policy reproduces V1's
+# defaults (allow-all, external_directory ask, .env read ask) and the project
+# config keeps the V1 restrictions (webfetch/websearch deny, /tmp allow), so no
+# blanket leading rule is needed. Dropped V1-only actions (no V2 equivalent):
+# list, todowrite, doom_loop. "web_*" targets the MCP tools of the local `web`
+# server (same action pattern as V1).
+permissions:
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: edit
+    resource: "PROJECT_MAP.md"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: web_*
+    resource: "*"
+    effect: deny
+  - action: skill
+    resource: "*"
+    effect: deny
+  - action: skill
+    resource: "create-projectmap"
+    effect: allow
 steps: 200
 ---
 

@@ -2,32 +2,71 @@
 description: "Lifecycle coordinator: routes planning, implementation, review and research through subagents (Planner, Builder, reviewers, Testing, Explorer, Librarian)."
 mode: all
 model: github-copilot/claude-opus-5
-reasoningEffort: high
-permission:
-  read: allow
-  edit:
-    "*": deny
-    PLAN.md: allow
-    tasks/*: allow
-  grep: allow
-  glob: allow
-  list: allow
-  bash: deny
-  question: allow
-  task:
-    "*": deny
-    "Planner": allow
-    "Builder": allow
-    "Testing": allow
-    "PlanReviewer": allow
-    "CodeReviewer": allow
-    "Explorer": allow
-    "Librarian": allow
-  web_*: deny
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+request:
+  body:
+    reasoningEffort: high # model-level option via native request.body (a top-level key triggers V2's legacy V1 decode, which drops permissions)
+# V2 native permissions ruleset (ordered, last match wins). This is a 1:1
+# conversion of the V1 frontmatter map: V2's base policy reproduces V1's
+# defaults (allow-all, external_directory ask, .env read ask) and the project
+# config keeps the V1 restrictions (webfetch/websearch deny, /tmp allow), so no
+# blanket leading rule is needed. Dropped V1-only actions (no V2 equivalent):
+# list, todowrite, doom_loop. "web_*" targets the MCP tools of the local `web`
+# server (same action pattern as V1).
+permissions:
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: edit
+    resource: "PLAN.md"
+    effect: allow
+  - action: edit
+    resource: "tasks/*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "Planner"
+    effect: allow
+  - action: subagent
+    resource: "Builder"
+    effect: allow
+  - action: subagent
+    resource: "Testing"
+    effect: allow
+  - action: subagent
+    resource: "PlanReviewer"
+    effect: allow
+  - action: subagent
+    resource: "CodeReviewer"
+    effect: allow
+  - action: subagent
+    resource: "Explorer"
+    effect: allow
+  - action: subagent
+    resource: "Librarian"
+    effect: allow
+  - action: web_*
+    resource: "*"
+    effect: deny
+  - action: skill
+    resource: "*"
+    effect: allow
 color: "#AA00AA"
 steps: 500
 ---

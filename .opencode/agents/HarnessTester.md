@@ -1,11 +1,18 @@
 ---
 description: "You are an agent used to test the agent harness"
 mode: primary
-disable: true
+disabled: true
 model: github-copilot/claude-opus-5
-reasoningEffort: high
-permission:
-  "*": allow
+request:
+  body:
+    reasoningEffort: high # model-level option via native request.body (a top-level key triggers V2's legacy V1 decode, which drops permissions)
+# V2 native permissions ruleset. The V1 frontmatter was a blanket
+# "*": allow, preserved verbatim: everything is allowed (V2's base policy is
+# allow-all anyway).
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: allow
 color: "#DD8800"
 ---
 

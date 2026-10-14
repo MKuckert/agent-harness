@@ -2,31 +2,58 @@
 description: "Retrieves required information from external resources and writes durable research notes"
 mode: subagent
 model: github-copilot/claude-sonnet-5
-reasoningEffort: low
-permission:
-  read:
-    "*": deny
-    "research/results/**": allow
-  edit:
-    "*": deny
-    "research/results/**": allow
-  grep:
-    "*": deny
-    "research/results/**": allow
-  glob:
-    "*": deny
-    "research/results/**": allow
-  list:
-    "*": deny
-    "research/results/**": allow
-  bash: deny
-  question: deny
-  task: deny
-  web_*: allow
-  skill:
-    "*": allow
-  todowrite: deny
-  doom_loop: allow
+request:
+  body:
+    reasoningEffort: low # model-level option via native request.body (a top-level key triggers V2's legacy V1 decode, which drops permissions)
+# V2 native permissions ruleset (ordered, last match wins). This is a 1:1
+# conversion of the V1 frontmatter map: V2's base policy reproduces V1's
+# defaults (allow-all, external_directory ask, .env read ask) and the project
+# config keeps the V1 restrictions (webfetch/websearch deny, /tmp allow), so no
+# blanket leading rule is needed. Dropped V1-only actions (no V2 equivalent):
+# list, todowrite, doom_loop. "web_*" targets the MCP tools of the local `web`
+# server (same action pattern as V1).
+permissions:
+  - action: read
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "research/results/**"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: edit
+    resource: "research/results/**"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: deny
+  - action: grep
+    resource: "research/results/**"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: deny
+  - action: glob
+    resource: "research/results/**"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  # V1 "web_*: allow" — MCP tools of the web server; built-in
+  # webfetch/websearch remain denied by the project config.
+  - action: web_*
+    resource: "*"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 steps: 200
 ---
 

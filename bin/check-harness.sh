@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # check-harness — lightweight, dependency-free static checks for the
-# OpenCode lifecycle harness (issue #101). Run from the agent-harness repo.
+# OpenCode V2 lifecycle harness (issue #101; V2-native frontmatter since #113).
+# Run from the agent-harness repo.
 set -u
 
 cd "$(git rev-parse --show-toplevel)" || { echo "not a git repo"; exit 1; }
@@ -18,8 +19,31 @@ has() { # $1=file $2=needle $3=description
     if grep -qF -- "$2" "$1" 2>/dev/null; then pass "$3"; else failmsg "$3"; fi
 }
 
+# V2 permissions frontmatter is an ordered YAML list of rules:
+#   - action: <action>
+#     resource: <resource>
+#     effect: allow|ask|deny
+# perm <file> <action> <resource> <effect> succeeds if that exact rule exists.
+perm() { # $1=file $2=action $3=resource $4=effect
+    frontmatter "$1" | awk -v a="$2" -v r="$3" -v e="$4" '
+        /action:/   {act=$NF;  sub(/^"/,"",act); sub(/"$/,"",act)}
+        /resource:/ {res=$NF;  sub(/^"/,"",res); sub(/"$/,"",res)}
+        /effect:/   {eff=$NF;  sub(/^"/,"",eff); sub(/"$/,"",eff)
+                          if (act==a && res==r && eff==e) {found=1; exit}}
+        END {exit found?0:1}'
+}
+
+# is_leaf <file>: no explicit subagent allow rule (leaves carry an explicit
+# "subagent *" deny, so absence of an allow means the agent cannot delegate).
+is_leaf() { # $1=file
+    frontmatter "$1" | awk '
+        /action:/ && $NF=="subagent" {in_sub=1; next}
+        in_sub && /effect:/ {if ($NF=="allow") exit 1; in_sub=0}
+        END {exit 0}'
+}
+
 # --- agent modes -------------------------------------------------------------
-has "$A/Orchestrator.md" 'mode: all'       "Orchestrator is selectable and Task-delegable"
+has "$A/Orchestrator.md" 'mode: all'       "Orchestrator is selectable and subagent-launching"
 if grep -q 'hidden: true' "$A/Orchestrator.md"; then failmsg "Orchestrator must not be hidden"; else pass "Orchestrator must not be hidden"; fi
 for a in Planner Builder Testing; do
     if grep -q 'mode: subagent' "$A/$a.md" && grep -q 'hidden: true' "$A/$a.md"; then
@@ -35,20 +59,19 @@ else
 fi
 has opencode.jsonc '"default_agent": "Buddy"' "Buddy is the configured default agent"
 
-# --- delegation graph (deny-by-default task targets) --------------------------
+# --- delegation graph (explicit subagent deny + expected edges) --------------
 check_targets() { # $1=agent $2=allowed (space sep) $3=forbidden (space sep)
-    local f="$A/$1.md" allowed forbidden ok=0
-    local fm; fm=$(frontmatter "$f")
-    echo "$fm" | grep -q '"\*": deny' || { failmsg "$1 task targets must be deny-by-default"; ok=1; }
-    for allowed in $2; do
-        echo "$fm" | grep -q "\"$allowed\": allow" || { failmsg "$1 must allow task target $allowed"; ok=1; }
+    local f="$A/$1.md" ok=0
+    perm "$f" subagent "*" deny || { failmsg "$1 must explicitly deny unknown subagent targets"; ok=1; }
+    for t in $2; do
+        perm "$f" subagent "$t" allow || { failmsg "$1 must allow subagent target $t"; ok=1; }
     done
-    for forbidden in $3; do
-        if echo "$fm" | grep -q "\"$forbidden\": allow"; then
-            failmsg "$1 must NOT allow task target $forbidden"; ok=1
+    for t in $3; do
+        if perm "$f" subagent "$t" allow; then
+            failmsg "$1 must NOT allow subagent target $t"; ok=1
         fi
     done
-    [ $ok -eq 0 ] && pass "$1 task target mapping (deny-by-default, expected edges only)"
+    [ $ok -eq 0 ] && pass "$1 subagent target mapping (explicit deny, expected edges only)"
 }
 check_targets Buddy        "Orchestrator Explorer Librarian" "Planner Builder Testing PlanReviewer CodeReviewer Committer"
 check_targets Orchestrator "Planner Builder Testing PlanReviewer CodeReviewer Explorer Librarian" "Committer Buddy"
@@ -57,22 +80,17 @@ check_targets Builder      "Committer" "Explorer Librarian Testing PlanReviewer 
 check_targets PlanReviewer "Explorer Librarian" "Builder Testing Committer"
 check_targets CodeReviewer "Explorer Librarian" "Builder Testing Committer"
 for a in Explorer Librarian Testing Committer; do
-    if frontmatter "$A/$a.md" | grep -qE '^\s*task:\s*(deny|\*)'; then
-        pass "$a is a leaf (task denied)"
+    if is_leaf "$A/$a.md"; then
+        pass "$a is a leaf (no subagent delegation)"
     else
-        # allow explicit 'task: deny' or a deny-only mapping
-        if frontmatter "$A/$a.md" | grep -q 'task: deny'; then
-            pass "$a is a leaf (task denied)"
-        else
-            failmsg "$a must be a leaf (no task delegation)"
-        fi
+        failmsg "$a must be a leaf (no subagent delegation)"
     fi
 done
 
 # --- config ------------------------------------------------------------------
 has opencode.jsonc '"build": {' "built-in build agent configured"
 for b in build plan general explore; do
-    if awk "/\"$b\": \\{/,/\\}/" opencode.jsonc | grep -q '"disable": true'; then
+    if awk "/\"$b\": \\{/,/\\}/" opencode.jsonc | grep -q '"disabled": true'; then
         pass "built-in $b agent disabled"
     else
         failmsg "built-in $b agent must be disabled"
@@ -105,7 +123,7 @@ for field in "Task ID" "Depends On" "Owned Paths" "Shared Resources" "Parallel S
 done
 
 # --- reviewer / builder contracts --------------------------------------------
-has "$A/Builder.md" '"PLAN.md": deny' "Builder cannot edit PLAN.md"
+perm "$A/Builder.md" edit "PLAN.md" deny && pass "Builder cannot edit PLAN.md" || failmsg "Builder cannot edit PLAN.md"
 has "$A/Committer.md" 'explicit list' "Committer stages only an explicit path list"
 has "$A/CodeReviewer.md" 'exactly one identified task' "CodeReviewer is task/scope-specific"
 has "$A/Orchestrator.md" 'at most **two**' "Orchestrator enforces the two-Builder batch limit"
@@ -113,23 +131,26 @@ has "$A/Orchestrator.md" 'at most **four**' "Orchestrator enforces the four-Libr
 has "$A/Orchestrator.md" 'exactly once' "Orchestrator resumes a failed child session exactly once"
 
 # --- librarian write confinement ----------------------------------------------
-fm=$(frontmatter "$A/Librarian.md")
-if echo "$fm" | grep -q '^  grep: allow$'; then
-    pass "Librarian can search research artifacts"
+perm "$A/Librarian.md" grep "research/results/**" allow && \
+    pass "Librarian can search research artifacts" || failmsg "Librarian grep permission must allow research/results/**"
+if perm "$A/Librarian.md" read "*" deny && \
+   perm "$A/Librarian.md" edit "*" deny && \
+   perm "$A/Librarian.md" edit "research/results/**" allow; then
+    # the single edit allow must be research/results/** (no other edit grants)
+    n=$(frontmatter "$A/Librarian.md" | awk '
+        /action:/ && $NF=="edit" {in_edit=1; next}
+        in_edit && /effect:/ {if ($NF=="allow") c++; in_edit=0}
+        END {print c+0}')
+    if [ "$n" = "1" ]; then
+        pass "Librarian write scope confined to research/results/**"
+    else
+        failmsg "Librarian edit permissions must allow research/results/** only (found $n edit allows)"
+    fi
 else
-    failmsg "Librarian grep permission must be allowed"
+    failmsg "Librarian must deny read/edit by default with only research/results/** allowed"
 fi
-if echo "$fm" | grep -q '"\*": deny' && \
-   echo "$fm" | grep -q 'research/results/\*\*' ; then
-    pass "Librarian write scope confined to research/results/**"
-else
-    failmsg "Librarian edit permissions must be deny-by-default with only research/results/** allowed"
-fi
-if echo "$fm" | grep -A2 '^  glob:' | grep -q 'research/results/\*\*.*allow'; then
-    pass "Librarian can inspect research/results/** for collisions"
-else
-    failmsg "Librarian glob permissions must allow research/results/** only"
-fi
+perm "$A/Librarian.md" glob "research/results/**" allow && \
+    pass "Librarian can inspect research/results/** for collisions" || failmsg "Librarian glob permissions must allow research/results/**"
 [ -f research/results/.gitkeep ] && pass "research/results/ destination provisioned in the harness" || failmsg "research/results/ destination missing"
 
 echo
